@@ -108,7 +108,7 @@ export function TitleBar({
     <div
       onMouseDown={onBarMouseDown}
       onDoubleClick={onBarDoubleClick}
-      className="flex h-9 shrink-0 cursor-grab select-none items-center border-b bg-background pl-3 active:cursor-grabbing"
+      className="flex h-9 shrink-0 select-none items-center border-b bg-background pl-3 active:cursor-grabbing"
     >
       <span className="text-xs font-medium text-muted-foreground">{APP_NAME}</span>
 
