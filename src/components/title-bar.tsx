@@ -76,7 +76,7 @@ export function TitleBar({
       aria-label={title}
       onClick={fn}
       className={cn(
-        'flex h-full w-11 items-center justify-center text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+        'flex h-full w-11 cursor-default items-center justify-center text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
         extra,
       )}
     >
@@ -108,7 +108,7 @@ export function TitleBar({
     <div
       onMouseDown={onBarMouseDown}
       onDoubleClick={onBarDoubleClick}
-      className="flex h-9 shrink-0 select-none items-center border-b bg-background pl-3 active:cursor-grabbing"
+      className="flex h-9 shrink-0 select-none cursor-default items-center border-b bg-background pl-3"
     >
       <span className="text-xs font-medium text-muted-foreground">{APP_NAME}</span>
 
@@ -118,7 +118,7 @@ export function TitleBar({
           title="控制台"
           aria-label="控制台"
           onClick={() => navigate('/')}
-          className="ml-3 inline-flex items-center transition-opacity hover:opacity-80"
+          className="ml-3 inline-flex cursor-default items-center transition-opacity hover:opacity-80"
         >
           <StatusPill status={status} endpointUp={endpointUp ?? false} />
         </button>
