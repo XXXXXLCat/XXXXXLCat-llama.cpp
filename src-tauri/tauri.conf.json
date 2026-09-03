@@ -1,7 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Llama Launcher",
-  "mainBinaryName": "Llama Launcher_0.1.2_x64",
+  "productName": "XXXXXLCat-llama.cpp",
+  "mainBinaryName": "XXXXXLCat-llama.cpp",
   "version": "0.1.2",
   "identifier": "com.xxlcat.llama-launcher",
   "build": {
@@ -13,7 +13,7 @@
   "app": {
     "windows": [
       {
-        "title": "Llama.cpp 启动器",
+        "title": "XXXXXLCat-llama.cpp",
         "width": 1360,
         "height": 880,
         "minWidth": 1080,
