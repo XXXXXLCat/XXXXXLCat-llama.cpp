@@ -180,3 +180,10 @@ pub fn reveal_in_explorer(path: String) -> Result<(), String> {
         Err("当前平台未实现".to_string())
     }
 }
+
+/// 采集系统硬件指标：CPU 占用、物理内存、GPU（名称/利用率/显存/温度）。
+/// 失败时不抛错，返回尽力可得的数据；无 NVIDIA 显卡时 `gpus` 为空。
+#[tauri::command]
+pub fn get_system_metrics() -> crate::metrics::SystemMetrics {
+    crate::metrics::collect()
+}

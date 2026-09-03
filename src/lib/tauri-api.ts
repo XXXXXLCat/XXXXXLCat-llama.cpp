@@ -119,6 +119,32 @@ export interface AppSettings {
   lastModelRoot: string
 }
 
+// ----------------------------------------------------------------- metrics
+
+export interface GpuMetric {
+  /** 显卡名称（如 NVIDIA GeForce RTX 4090） */
+  name: string
+  /** 利用率百分比 0–100 */
+  utilization: number | null
+  /** 已用显存（字节） */
+  memory_used: number | null
+  /** 总显存（字节） */
+  memory_total: number | null
+  /** 核心温度（摄氏度） */
+  temperature: number | null
+}
+
+export interface SystemMetrics {
+  /** CPU 整体占用率百分比 0–100 */
+  cpu_usage: number
+  /** 已用物理内存（字节） */
+  memory_used: number
+  /** 总物理内存（字节） */
+  memory_total: number
+  /** 各 GPU 指标；无 NVIDIA 显卡时为空数组 */
+  gpus: GpuMetric[]
+}
+
 export const EVENT_LOG = 'llama://log'
 export const EVENT_STATUS = 'llama://status'
 
@@ -143,6 +169,7 @@ export interface Api {
   pickFile(start?: string | null, filters?: string[] | null): Promise<string | null>
   openInShell(target: string): Promise<void>
   revealInExplorer(path: string): Promise<void>
+  getSystemMetrics(): Promise<SystemMetrics>
 }
 
 const realApi: Api = {
@@ -168,6 +195,7 @@ const realApi: Api = {
     invoke<string | null>('pick_file', { start: start ?? null, filters: filters ?? null }),
   openInShell: (target: string) => invoke<void>('open_in_shell', { target }),
   revealInExplorer: (path: string) => invoke<void>('reveal_in_explorer', { path }),
+  getSystemMetrics: () => invoke<SystemMetrics>('get_system_metrics'),
 }
 
 let mockModule: MockModule | null = null

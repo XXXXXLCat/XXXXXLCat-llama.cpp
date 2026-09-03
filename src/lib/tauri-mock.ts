@@ -7,11 +7,13 @@
  */
 import type {
   AppSettings,
+  GpuMetric,
   LaunchConfig,
   LogLine,
   MmprojMatch,
   ModelFile,
   ServerStatus,
+  SystemMetrics,
 } from './tauri-api'
 
 export function isTauriRuntime(): boolean {
@@ -188,6 +190,7 @@ export interface MockApi {
   pickFile(start?: string, filters?: string[]): Promise<string | null>
   openInShell(target: string): Promise<void>
   revealInExplorer(path: string): Promise<void>
+  getSystemMetrics(): Promise<SystemMetrics>
 }
 
 export interface MockModule {
@@ -406,6 +409,26 @@ export function createMock(): MockModule {
     },
     async revealInExplorer(path) {
       console.info('[mock] reveal in explorer:', path)
+    },
+    async getSystemMetrics() {
+      await sleep(80)
+      // 浏览器预览无真实硬件，返回带轻微抖动的拟真数据，便于查看 UI 形态。
+      const t = Date.now() / 1000
+      const wobble = (base: number, amp: number) =>
+        Math.max(0, Math.min(100, base + Math.sin(t / 3) * amp))
+      const gpu: GpuMetric = {
+        name: 'NVIDIA GeForce RTX 4090 (模拟)',
+        utilization: wobble(38, 18),
+        memory_used: 11_500_000_000 + Math.round(Math.sin(t / 5) * 1_500_000_000),
+        memory_total: 24_000_000_000,
+        temperature: Math.round(wobble(62, 6)),
+      }
+      return {
+        cpu_usage: wobble(22, 12),
+        memory_used: 9_400_000_000 + Math.round(Math.sin(t / 7) * 800_000_000),
+        memory_total: 32_000_000_000,
+        gpus: [gpu],
+      }
     },
   }
 

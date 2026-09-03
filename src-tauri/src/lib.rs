@@ -1,4 +1,5 @@
 mod commands;
+mod metrics;
 mod models;
 mod server;
 mod settings;
@@ -38,6 +39,7 @@ pub fn run() {
             commands::pick_file,
             commands::open_in_shell,
             commands::reveal_in_explorer,
+            commands::get_system_metrics,
         ]);
 
     let app = builder

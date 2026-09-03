@@ -5,6 +5,7 @@ import { ExternalLink, Play, Save, Square, TriangleAlert } from 'lucide-react'
 import { LogView } from '@/components/log-view'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import {
   Card,
   CardAction,
@@ -26,12 +27,27 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
   )
 }
 
+/** 带百分比数值的进度条（用于 CPU / GPU 利用率） */
+function MetricBar({ value, label }: { value: number; label: string }) {
+  const clamped = Math.max(0, Math.min(100, value))
+  return (
+    <div className="space-y-1">
+      <div className="flex items-baseline justify-between">
+        <span className="text-muted-foreground">{label}</span>
+        <span className="tabular-nums">{clamped.toFixed(0)}%</span>
+      </div>
+      <Progress value={clamped} />
+    </div>
+  )
+}
+
 export function ConsolePage() {
   const {
     config,
     status,
     logs,
     endpointUp,
+    metrics,
     busy,
     dirty,
     actionError,
@@ -175,6 +191,76 @@ export function ConsolePage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>系统监控</CardTitle>
+          <CardDescription>CPU / 内存 / GPU 实时占用（每 2 秒刷新）</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {metrics ? (
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="space-y-3">
+                <MetricBar value={metrics.cpu_usage} label="CPU" />
+                <div className="space-y-1">
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-muted-foreground">内存</span>
+                    <span className="tabular-nums text-sm">
+                      {formatBytes(metrics.memory_used)} / {formatBytes(metrics.memory_total)}
+                    </span>
+                  </div>
+                  <Progress
+                    value={
+                      metrics.memory_total
+                        ? (metrics.memory_used / metrics.memory_total) * 100
+                        : 0
+                    }
+                  />
+                </div>
+              </div>
+
+              {metrics.gpus.length === 0 ? (
+                <div className="flex items-center justify-center rounded-lg border border-dashed p-6 text-muted-foreground">
+                  未检测到 GPU
+                </div>
+              ) : (
+                metrics.gpus.map((gpu, i) => (
+                  <div key={i} className="space-y-2 rounded-lg border p-3">
+                    <div className="truncate font-medium" title={gpu.name}>
+                      {gpu.name}
+                    </div>
+                    <MetricBar value={gpu.utilization ?? 0} label="GPU 利用率" />
+                    <div className="space-y-1">
+                      <div className="flex items-baseline justify-between">
+                        <span className="text-muted-foreground">显存</span>
+                        <span className="tabular-nums text-sm">
+                          {gpu.memory_used != null ? formatBytes(gpu.memory_used) : '—'} /{' '}
+                          {gpu.memory_total != null ? formatBytes(gpu.memory_total) : '—'}
+                        </span>
+                      </div>
+                      <Progress
+                        value={
+                          gpu.memory_total && gpu.memory_used != null
+                            ? (gpu.memory_used / gpu.memory_total) * 100
+                            : 0
+                        }
+                      />
+                    </div>
+                    <div className="flex items-baseline justify-between text-sm">
+                      <span className="text-muted-foreground">温度</span>
+                      <span className="tabular-nums">
+                        {gpu.temperature != null ? `${gpu.temperature} °C` : '—'}
+                      </span>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          ) : (
+            <p className="text-muted-foreground">正在读取硬件信息…</p>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

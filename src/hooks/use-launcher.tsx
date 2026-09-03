@@ -11,6 +11,7 @@ import {
   type MmprojMatch,
   type ModelFile,
   type ServerStatus,
+  type SystemMetrics,
 } from '@/lib/tauri-api'
 
 const MAX_LOGS = 5000
@@ -37,6 +38,8 @@ interface LauncherContextValue {
   status: ServerStatus
   logs: LogLine[]
   endpointUp: boolean
+  /** 系统硬件指标（CPU/内存/GPU），每 2 秒轮询一次 */
+  metrics: SystemMetrics | null
   mmprojMatch: MmprojMatch | null
   busy: boolean
   actionError: string | null
@@ -72,6 +75,7 @@ export function LauncherProvider({
   const [status, setStatus] = React.useState<ServerStatus>(EMPTY_STATUS)
   const [logs, setLogs] = React.useState<LogLine[]>([])
   const [endpointUp, setEndpointUp] = React.useState(false)
+  const [metrics, setMetrics] = React.useState<SystemMetrics | null>(null)
   const [mmprojMatch, setMmprojMatch] = React.useState<MmprojMatch | null>(null)
   const [busy, setBusy] = React.useState(false)
   const [actionError, setActionError] = React.useState<string | null>(null)
@@ -205,6 +209,26 @@ export function LauncherProvider({
     }
   }, [status.running, host, port])
 
+  // --------------------------------------------------- system metrics poll
+
+  React.useEffect(() => {
+    let cancelled = false
+    const tick = async () => {
+      try {
+        const m = await api.getSystemMetrics()
+        if (!cancelled) setMetrics(m)
+      } catch {
+        // 指标采集失败不影响其他功能；保留上一次成功的结果
+      }
+    }
+    void tick()
+    const timer = window.setInterval(tick, 2000)
+    return () => {
+      cancelled = true
+      window.clearInterval(timer)
+    }
+  }, [])
+
   // ------------------------------------------- auto open web ui on ready
 
   const autoOpenBrowser = config?.autoOpenBrowser ?? false
@@ -303,6 +327,7 @@ export function LauncherProvider({
       status,
       logs,
       endpointUp,
+      metrics,
       mmprojMatch,
       busy,
       actionError,
@@ -327,6 +352,7 @@ export function LauncherProvider({
       status,
       logs,
       endpointUp,
+      metrics,
       mmprojMatch,
       busy,
       actionError,
