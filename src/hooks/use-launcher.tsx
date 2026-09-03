@@ -234,12 +234,23 @@ export function LauncherProvider({
   const autoOpenBrowser = config?.autoOpenBrowser ?? false
   const webuiEnabled = config?.webui ?? true
   const prevEndpointUp = React.useRef(false)
+  // 本会话内「自动打开 Web UI」只执行一次：即便服务状态在就绪/未就绪之间
+  // 抖动（endpointUp 反复出现上升沿），也只弹出一个浏览器窗口，避免表现为
+  // 「每隔几秒弹一次、需不断关闭」的循环。用户手动点「打开 Web UI」不受此限。
+  const autoOpenedRef = React.useRef(false)
 
   React.useEffect(() => {
     // 仅在「服务就绪」上升沿触发一次：每次启动到就绪会自动打开 Web UI；
     // 关闭内置 Web UI 或未开启本开关时不打开。地址经 client_host 归一化
     // （0.0.0.0 / :: 回落 127.0.0.1），与「打开 Web UI」按钮口径一致。
-    if (endpointUp && !prevEndpointUp.current && autoOpenBrowser && webuiEnabled) {
+    if (
+      endpointUp &&
+      !prevEndpointUp.current &&
+      !autoOpenedRef.current &&
+      autoOpenBrowser &&
+      webuiEnabled
+    ) {
+      autoOpenedRef.current = true
       void api.openInShell(endpointUrl(host, port))
     }
     prevEndpointUp.current = endpointUp

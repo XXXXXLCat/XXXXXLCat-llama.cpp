@@ -78,9 +78,18 @@ fn collect_gpus() -> Vec<GpuMetric> {
     ];
 
     let Some(output) = candidates.iter().find_map(|bin| {
-        Command::new(bin)
-            .args([QUERY, FORMAT])
-            .output()
+        let mut cmd = Command::new(bin);
+        cmd.args([QUERY, FORMAT]);
+        // Windows 下 nvidia-smi 是控制台子系统程序，而父进程（Tauri 桌面应用）
+        // 是 GUI 子系统。GUI 程序派生命令行子进程时，Windows 会为其新建一个
+        // 可见控制台窗口，导致每 2 秒（指标轮询周期）弹出一个 cmd 窗口。
+        // 设置 CREATE_NO_WINDOW (0x08000000) 抑制子进程控制台窗口。
+        #[cfg(windows)]
+        {
+            use std::os::windows::process::CommandExt;
+            cmd.creation_flags(0x08000000);
+        }
+        cmd.output()
             .ok()
             .filter(|o| o.status.success())
     }) else {
