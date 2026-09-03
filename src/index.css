@@ -551,14 +551,14 @@
 
 @layer utilities {
   /**
-   * 原生滚动条（细滑块，shadcn 风格）。
-   * 用稳定可读的 rgba 灰，不依赖 oklch/color-mix，
-   * 保证在 WebView2（Chromium 内核）下一定可见；
-   * color-scheme: dark 让原生滚动条走深色外观（默认样式）。
+   * 原生滚动条（细滑块），颜色与 shadcn ScrollArea 一致：
+   * thumb 用 --border（即 ScrollArea 的 bg-border），以 color-mix/oklch
+   * 表达，贴合设计体系令牌；hover 略提亮至接近 --muted-foreground。
+   * 颜色均来自主题令牌，深浅主题自动适配。
    */
   .custom-scrollbar {
     scrollbar-width: thin;
-    scrollbar-color: rgba(160, 160, 160, 0.5) transparent;
+    scrollbar-color: var(--border) transparent;
     color-scheme: dark;
   }
 
@@ -572,13 +572,13 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb {
-    background-color: rgba(160, 160, 160, 0.5);
+    background-color: color-mix(in oklch, var(--border) 100%, transparent);
     border-radius: 9999px;
     border: 2px solid transparent;
     background-clip: content-box;
   }
 
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background-color: rgba(190, 190, 190, 0.8);
+    background-color: color-mix(in oklch, var(--border) 50%, var(--muted-foreground));
   }
 }
