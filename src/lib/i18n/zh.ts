@@ -51,7 +51,7 @@ export const ZH: Record<string, string> = {
   'console.mainAndVision': "主模型与视觉投影",
   'console.mainModel': "主模型",
   'console.memory': "内存",
-  'console.monitorDesc': "CPU / 内存 / GPU 利用率 / 显存 / 温度（每 2 秒刷新）",
+  'console.monitorDesc': "CPU / 内存 / GPU 利用率 / 显存 / 温度（每秒刷新）",
   'console.noGpu': "未检测到 GPU",
   'console.noModelSelected': "尚未选择主模型",
   'console.openWebUI': "打开 Web UI",

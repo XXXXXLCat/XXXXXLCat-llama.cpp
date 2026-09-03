@@ -222,7 +222,7 @@ export function LauncherProvider({
       }
     }
     void tick()
-    const timer = window.setInterval(tick, 2000)
+    const timer = window.setInterval(tick, 1000)
     return () => {
       cancelled = true
       window.clearInterval(timer)
