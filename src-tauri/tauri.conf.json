@@ -1,6 +1,7 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "Llama Launcher",
+  "mainBinaryName": "Llama Launcher_0.1.2_x64",
   "version": "0.1.2",
   "identifier": "com.xxlcat.llama-launcher",
   "build": {
