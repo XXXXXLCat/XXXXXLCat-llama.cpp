@@ -62,9 +62,13 @@ export function resolveLocale(pref: LocalePref): LangCode {
   if (pref !== 'system') return pref
   const nav = (navigator.language || 'en').toLowerCase()
   const base = nav.split('-')[0]
+  // 先精确匹配（如 zh-TW），避免被 base(zh) 抢先
   for (const c of SUPPORTED) {
-    const cl = c.toLowerCase()
-    if (cl === nav || cl === base) return c
+    if (c.toLowerCase() === nav) return c
+  }
+  // 再按主语言匹配（如 zh）
+  for (const c of SUPPORTED) {
+    if (c.toLowerCase() === base) return c
   }
   return 'en'
 }
