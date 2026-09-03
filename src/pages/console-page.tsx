@@ -27,14 +27,22 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
   )
 }
 
-/** 带百分比数值的进度条（用于 CPU / GPU 利用率） */
-function MetricBar({ value, label }: { value: number; label: string }) {
+/** 带数值的进度条（CPU / 内存 / GPU 利用率 / 显存 / 温度 通用磁贴） */
+function MetricBar({
+  value,
+  label,
+  detail,
+}: {
+  value: number
+  label: string
+  detail?: string
+}) {
   const clamped = Math.max(0, Math.min(100, value))
   return (
     <div className="space-y-1">
-      <div className="flex items-baseline justify-between">
+      <div className="flex items-baseline justify-between gap-2">
         <span className="text-muted-foreground">{label}</span>
-        <span className="tabular-nums">{clamped.toFixed(0)}%</span>
+        <span className="tabular-nums text-sm">{detail ?? `${clamped.toFixed(0)}%`}</span>
       </div>
       <Progress value={clamped} />
     </div>
@@ -195,67 +203,62 @@ export function ConsolePage() {
       <Card>
         <CardHeader>
           <CardTitle>系统监控</CardTitle>
-          <CardDescription>CPU / 内存 / GPU 实时占用（每 2 秒刷新）</CardDescription>
+          <CardDescription>CPU / 内存 / GPU 利用率 / 显存 / 温度（每 2 秒刷新）</CardDescription>
         </CardHeader>
         <CardContent>
           {metrics ? (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              <div className="space-y-3">
-                <MetricBar value={metrics.cpu_usage} label="CPU" />
-                <div className="space-y-1">
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-muted-foreground">内存</span>
-                    <span className="tabular-nums text-sm">
-                      {formatBytes(metrics.memory_used)} / {formatBytes(metrics.memory_total)}
-                    </span>
-                  </div>
-                  <Progress
-                    value={
-                      metrics.memory_total
-                        ? (metrics.memory_used / metrics.memory_total) * 100
-                        : 0
-                    }
-                  />
-                </div>
-              </div>
+            <>
+              {metrics.gpus.length > 0 && (
+                <p className="mb-3 text-xs text-muted-foreground">
+                  GPU：{metrics.gpus.map((g) => g.name).join('、')}
+                </p>
+              )}
+              <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+                <MetricBar value={metrics.cpu_usage} label="CPU 占用" />
+                <MetricBar
+                  value={
+                    metrics.memory_total
+                      ? (metrics.memory_used / metrics.memory_total) * 100
+                      : 0
+                  }
+                  label="内存"
+                  detail={`${formatBytes(metrics.memory_used)} / ${formatBytes(metrics.memory_total)}`}
+                />
 
-              {metrics.gpus.length === 0 ? (
-                <div className="flex items-center justify-center rounded-lg border border-dashed p-6 text-muted-foreground">
-                  未检测到 GPU
-                </div>
-              ) : (
-                metrics.gpus.map((gpu, i) => (
-                  <div key={i} className="space-y-2 rounded-lg border p-3">
-                    <div className="truncate font-medium" title={gpu.name}>
-                      {gpu.name}
-                    </div>
-                    <MetricBar value={gpu.utilization ?? 0} label="GPU 利用率" />
-                    <div className="space-y-1">
-                      <div className="flex items-baseline justify-between">
-                        <span className="text-muted-foreground">显存</span>
-                        <span className="tabular-nums text-sm">
-                          {gpu.memory_used != null ? formatBytes(gpu.memory_used) : '—'} /{' '}
-                          {gpu.memory_total != null ? formatBytes(gpu.memory_total) : '—'}
-                        </span>
-                      </div>
-                      <Progress
+                {metrics.gpus.length === 0 ? (
+                  <div className="flex items-center justify-center rounded-lg border border-dashed p-6 text-muted-foreground">
+                    未检测到 GPU
+                  </div>
+                ) : (
+                  metrics.gpus.map((gpu, i) => (
+                    <React.Fragment key={i}>
+                      <MetricBar
+                        value={gpu.utilization ?? 0}
+                        label={metrics.gpus.length > 1 ? `GPU ${i + 1} 利用率` : 'GPU 利用率'}
+                      />
+                      <MetricBar
                         value={
                           gpu.memory_total && gpu.memory_used != null
                             ? (gpu.memory_used / gpu.memory_total) * 100
                             : 0
                         }
+                        label="显存"
+                        detail={
+                          gpu.memory_used != null && gpu.memory_total != null
+                            ? `${formatBytes(gpu.memory_used)} / ${formatBytes(gpu.memory_total)}`
+                            : '—'
+                        }
                       />
-                    </div>
-                    <div className="flex items-baseline justify-between text-sm">
-                      <span className="text-muted-foreground">温度</span>
-                      <span className="tabular-nums">
-                        {gpu.temperature != null ? `${gpu.temperature} °C` : '—'}
-                      </span>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
+                      <MetricBar
+                        value={gpu.temperature != null ? gpu.temperature : 0}
+                        label="温度"
+                        detail={gpu.temperature != null ? `${gpu.temperature} °C` : '—'}
+                      />
+                    </React.Fragment>
+                  ))
+                )}
+              </div>
+            </>
           ) : (
             <p className="text-muted-foreground">正在读取硬件信息…</p>
           )}
