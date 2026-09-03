@@ -7,12 +7,12 @@ export interface ScrollAreaProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 /**
- * 使用浏览器原生滚动 + CSS 细滚动条。
+ * 使用common.browse器原生滚动 + CSS 细滚动条。
  *
  * 原 `@base-ui/react/scroll-area` 通过 React 自定义 thumb/scrollbar，
  * 但在当前 WebView2 环境下无法显示滚动条，导致页面内容无法滚动。
  * 这里改回原生 `overflow-y-auto` 并挂 `custom-scrollbar` 样式类，
- * 保证滚动条始终可见、跨主题清晰，并保留 shadcn 风格的细滑块外观。
+ * 保证滚动条始终可见、跨主题清晰，并保留 shadcn 风格的细滑块prefs.appearance。
  */
 function ScrollArea({ className, children, ...props }: ScrollAreaProps) {
   return (

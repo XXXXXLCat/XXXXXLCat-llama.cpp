@@ -17,9 +17,9 @@ const PHASE_META: Record<
   ServerPhase,
   { label: string; variant: 'default' | 'secondary' | 'outline' | 'destructive'; icon: typeof Square | null }
 > = {
-  idle: { label: 'llama.cpp 未启动', variant: 'destructive', icon: null },
-  starting: { label: '模型加载中', variant: 'secondary', icon: LoaderCircle },
-  ready: { label: 'llama.cpp 运行中', variant: 'default', icon: LoaderCircle },
+  idle: { label: 'status.notRunning', variant: 'destructive', icon: null },
+  starting: { label: 'status.loadingModel', variant: 'secondary', icon: LoaderCircle },
+  ready: { label: 'status.running', variant: 'default', icon: LoaderCircle },
 }
 
 

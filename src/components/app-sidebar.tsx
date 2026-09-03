@@ -6,16 +6,16 @@ import { cn } from '@/lib/utils'
 import { useI18n } from '@/lib/i18n'
 
 const NAV = [
-  { to: '/', label: '控制台', icon: Gauge, end: true },
-  { to: '/settings', label: '参数设置', icon: SlidersHorizontal, end: false },
-  { to: '/models', label: '模型', icon: Boxes, end: false },
-  { to: '/logs', label: '运行日志', icon: Terminal, end: false },
-  { to: '/preferences', label: '偏好设置', icon: Settings, end: false },
+  { to: '/', label: 'nav.console', icon: Gauge, end: true },
+  { to: '/settings', label: 'nav.parameters', icon: SlidersHorizontal, end: false },
+  { to: '/models', label: 'nav.models', icon: Boxes, end: false },
+  { to: '/logs', label: 'nav.logs', icon: Terminal, end: false },
+  { to: '/preferences', label: 'nav.preferences', icon: Settings, end: false },
 ] as const
 
 const APP_NAME = 'XXXXXLCat-llama.cpp'
 
-/** 品牌标记：用 favicon 的路径做遮罩，随侧边栏前景色变化（hover / 激活同步高亮） */
+/** 品牌标记：用 favicon 的settings.paths做遮罩，随侧边栏前景色变化（hover / 激活同步高亮） */
 const LOGO_MASK: React.CSSProperties = {
   WebkitMaskImage: 'url(/favicon.svg)',
   maskImage: 'url(/favicon.svg)',
@@ -64,7 +64,7 @@ export function AppSidebar() {
 }
 
 /**
- * 底部品牌标记：点击进入 AI 聊天整页（/chat）。
+ * 底部品牌标记：点击进入 chat.title整页（/chat）。
  */
 function SidebarBrand() {
   const navigate = useNavigate()
@@ -73,7 +73,7 @@ function SidebarBrand() {
     <button
       type="button"
       onClick={() => navigate('/chat')}
-      title={t('AI 聊天')}
+      title={t('chat.title')}
       aria-label={APP_NAME}
       className="group mt-auto flex h-20 w-full shrink-0 items-center justify-center text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
     >

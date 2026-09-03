@@ -126,20 +126,20 @@ export interface GpuMetric {
   name: string
   /** 利用率百分比 0–100 */
   utilization: number | null
-  /** 已用显存（字节） */
+  /** 已用console.vram（字节） */
   memory_used: number | null
-  /** 总显存（字节） */
+  /** 总console.vram（字节） */
   memory_total: number | null
-  /** 核心温度（摄氏度） */
+  /** 核心settings.tempLabel（摄氏度） */
   temperature: number | null
 }
 
 export interface SystemMetrics {
   /** CPU 整体占用率百分比 0–100 */
   cpu_usage: number
-  /** 已用物理内存（字节） */
+  /** 已用物理console.memory（字节） */
   memory_used: number
-  /** 总物理内存（字节） */
+  /** 总物理console.memory（字节） */
   memory_total: number
   /** 各 GPU 指标；无 NVIDIA 显卡时为空数组 */
   gpus: GpuMetric[]
@@ -150,7 +150,7 @@ export const EVENT_STATUS = 'llama://status'
 
 // ------------------------------------------------------------------ invoke
 //
-// 桌面运行时内所有命令由 Rust 后端执行；在纯浏览器（`vite dev` 预览）中，
+// 桌面运行时内所有命令由 Rust 后端执行；在纯common.browse器（`vite dev` 预览）中，
 // 自动切换到 `tauri-mock` 提供的模拟实现，保证 UI 全流程可独立预览。
 
 export interface Api {
@@ -204,7 +204,7 @@ function getMock(): MockModule {
   return mockModule
 }
 
-/** 环境自适应代理：Tauri 内走 Rust，浏览器内走模拟层。 */
+/** 环境自适应代理：Tauri 内走 Rust，common.browse器内走模拟层。 */
 export const api: Api = new Proxy({} as Api, {
   get(_target, prop: string | symbol) {
     const impl: Api = isTauriRuntime() ? realApi : getMock().api
@@ -251,10 +251,10 @@ export function formatDuration(ms: number): string {
 }
 
 /**
- * 把「监听地址」换算为本机客户端能真正连上的地址。
+ * 把「settings.listenAddr」换算为本机客户端能真正连上的地址。
  *
  * `0.0.0.0` / `::` 只是通配绑定地址：Windows 拒绝向其发起连接
- * （WinError 10049），浏览器也无法加载 `http://0.0.0.0:8080`。
+ * （WinError 10049），common.browse器也无法加载 `http://0.0.0.0:8080`。
  * 与 Rust 侧 `server::client_host` 保持同一语义。
  */
 export function clientHost(host: string): string {
@@ -262,7 +262,7 @@ export function clientHost(host: string): string {
   return h === '' || h === '0.0.0.0' || h === '::' || h === '[::]' ? '127.0.0.1' : h
 }
 
-/** 供浏览器打开的服务地址（监听地址已归一化）。 */
+/** 供common.browse器打开的console.endpoint（settings.listenAddr已归一化）。 */
 export function endpointUrl(host: string, port: number): string {
   return `http://${clientHost(host)}:${port}`
 }

@@ -46,8 +46,8 @@ function readImage(file: File): Promise<PendingImage> {
 }
 
 /**
- * AI 聊天整页：复用本地 llama-server 的 OpenAI 兼容 /v1/chat/completions。
- * 支持多模态图片输入（走 llama.cpp 的 message.images 字段，需视觉模型 mmproj）。
+ * chat.title整页：复用本地 llama-server 的 OpenAI 兼容 /v1/chat/completions。
+ * 支持多模态图片输入（走 llama.cpp 的 message.images 字段，需console.visionModel mmproj）。
  * 消息渲染走 shadcn 官方的 Message + Bubble，滚动用 ScrollArea。
  */
 export function ChatPage() {
@@ -99,7 +99,7 @@ export function ChatPage() {
 
     try {
       // llama.cpp 多模态当前走 MTMD，OpenAI 兼容接口要求图片以 content 数组里的
-      // image_url 部件发送（老式 messages[].images 字段 MTMD 路径不识别，会被静默丢弃）。
+      // image_url 部件chat.send（老式 messages[].images 字段 MTMD settings.paths不识别，会被静默丢弃）。
       const payloadMessages = history.map((m) => {
         if (m.images && m.images.length > 0) {
           return {
@@ -128,7 +128,7 @@ export function ChatPage() {
       if (!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`)
       const data = await res.json()
       const reply: string =
-        data?.choices?.[0]?.message?.content ?? t('（模型未返回内容）')
+        data?.choices?.[0]?.message?.content ?? t('chat.noContent')
       setMessages((prev) =>
         prev.map((m) => (m.id === assistantId ? { ...m, content: reply } : m)),
       )
@@ -137,7 +137,7 @@ export function ChatPage() {
       setMessages((prev) =>
         prev.map((m) =>
           m.id === assistantId
-            ? { ...m, content: `⚠️ ${t('请求失败')}：${String(e)}` }
+            ? { ...m, content: `⚠️ ${t('chat.requestFailed')}：${String(e)}` }
             : m,
         ),
       )
@@ -159,7 +159,7 @@ export function ChatPage() {
         <div className="flex flex-col gap-3 p-3">
           {messages.length === 0 ? (
             <p className="py-16 text-center text-sm text-muted-foreground">
-              {canChat ? t('开始和本地模型对话吧') : t('请先在控制台启动服务')}
+              {canChat ? t('chat.startChat') : t('chat.needServer')}
             </p>
           ) : (
             messages.map((m) => (
@@ -167,7 +167,7 @@ export function ChatPage() {
                 <MessageContent>
                   <Bubble variant={m.role === 'user' ? 'default' : 'muted'}>
                     <BubbleContent className="whitespace-pre-wrap">
-                      {m.content || (busy ? t('正在生成…') : '')}
+                      {m.content || (busy ? t('chat.generating') : '')}
                       {m.images && m.images.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-3">
                           {m.images.map((src, i) => (
@@ -175,7 +175,7 @@ export function ChatPage() {
                               key={i}
                               type="button"
                               onClick={() => setLightbox(src)}
-                              aria-label={t('图片预览')}
+                              aria-label={t('chat.imagePreview')}
                               className="overflow-hidden rounded-lg border border-border transition-transform hover:scale-105"
                             >
                               <img
@@ -205,7 +205,7 @@ export function ChatPage() {
                 <img src={p.dataUrl} alt={p.name} />
               </AttachmentMedia>
               <AttachmentActions>
-                <AttachmentAction aria-label={t('移除图片')} onClick={() => removePending(p.id)}>
+                <AttachmentAction aria-label={t('chat.removeImage')} onClick={() => removePending(p.id)}>
                   <X className="size-3.5" />
                 </AttachmentAction>
               </AttachmentActions>
@@ -227,7 +227,7 @@ export function ChatPage() {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={onKeyDown}
-          placeholder={t('输入消息…')}
+          placeholder={t('chat.inputPlaceholder')}
           disabled={!canChat || busy}
           className="h-9 flex-1 border-0 bg-transparent px-3 shadow-none focus-visible:ring-0"
         />
@@ -237,7 +237,7 @@ export function ChatPage() {
           size="icon"
           onClick={() => fileRef.current?.click()}
           disabled={!canChat || busy}
-          aria-label={t('添加图片')}
+          aria-label={t('chat.addImage')}
           className="size-8 shrink-0"
         >
           <Paperclip className="size-4" />
@@ -246,7 +246,7 @@ export function ChatPage() {
           onClick={() => void send()}
           disabled={!canChat || busy || (!input.trim() && pending.length === 0)}
         >
-          {t('发送')}
+          {t('chat.send')}
           <Send className="ml-1 size-4" />
         </Button>
       </div>
@@ -260,7 +260,7 @@ export function ChatPage() {
         }}
       >
         <DialogContent className="max-w-[90vw] w-auto border-0 bg-transparent p-0 shadow-none">
-          <DialogTitle className="sr-only">{t('图片预览')}</DialogTitle>
+          <DialogTitle className="sr-only">{t('chat.imagePreview')}</DialogTitle>
           {lightbox && (
             <img
               src={lightbox}

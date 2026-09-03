@@ -13,7 +13,7 @@ export function LogView({
   autoScroll = true,
   showTimestamps = true,
   className,
-  emptyHint = '暂无日志',
+  emptyHint = 'logs.empty',
 }: {
   lines: LogLine[]
   autoScroll?: boolean
@@ -56,7 +56,7 @@ export function LogView({
               </span>
             )}
             {line.stream === 'system' ? (
-              <span className="shrink-0 text-muted-foreground">{t('[启动器]')}</span>
+              <span className="shrink-0 text-muted-foreground">{t('log.launcherTag')}</span>
             ) : (
               <span className="shrink-0 text-muted-foreground">
                 [{line.stream === 'stderr' ? 'err' : 'out'}]

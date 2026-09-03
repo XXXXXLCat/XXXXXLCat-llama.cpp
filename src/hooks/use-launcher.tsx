@@ -38,7 +38,7 @@ interface LauncherContextValue {
   status: ServerStatus
   logs: LogLine[]
   endpointUp: boolean
-  /** 系统硬件指标（CPU/内存/GPU），每 2 秒轮询一次 */
+  /** 系统硬件指标（CPU/console.memory/GPU），每 2 秒轮询一次 */
   metrics: SystemMetrics | null
   mmprojMatch: MmprojMatch | null
   busy: boolean
@@ -234,15 +234,15 @@ export function LauncherProvider({
   const autoOpenBrowser = config?.autoOpenBrowser ?? false
   const webuiEnabled = config?.webui ?? true
   const prevEndpointUp = React.useRef(false)
-  // 本会话内「自动打开 Web UI」只执行一次：即便服务状态在就绪/未就绪之间
-  // 抖动（endpointUp 反复出现上升沿），也只弹出一个浏览器窗口，避免表现为
-  // 「每隔几秒弹一次、需不断关闭」的循环。用户手动点「打开 Web UI」不受此限。
+  // 本会话内「自动console.openWebUI」只执行一次：即便服务状态在就绪/未就绪之间
+  // 抖动（endpointUp 反复出现上升沿），也只弹出一个common.browse器窗口，避免表现为
+  // 「每隔几秒弹一次、需不断common.close」的循环。用户手动点「console.openWebUI」不受此限。
   const autoOpenedRef = React.useRef(false)
 
   React.useEffect(() => {
-    // 仅在「服务就绪」上升沿触发一次：每次启动到就绪会自动打开 Web UI；
-    // 关闭内置 Web UI 或未开启本开关时不打开。地址经 client_host 归一化
-    // （0.0.0.0 / :: 回落 127.0.0.1），与「打开 Web UI」按钮口径一致。
+    // 仅在「服务就绪」上升沿触发一次：每次启动到就绪会自动console.openWebUI；
+    // common.closesettings.webui 或未开启本开关时不打开。地址经 client_host 归一化
+    // （0.0.0.0 / :: 回落 127.0.0.1），与「console.openWebUI」按钮口径一致。
     if (
       endpointUp &&
       !prevEndpointUp.current &&
@@ -294,7 +294,7 @@ export function LauncherProvider({
     setActionError(null)
     try {
       await api.startServer(config)
-      // 启动用的是内存态 config：必须在此落盘，否则清空 dirty 后
+      // 启动用的是console.memory态 config：必须在此落盘，否则common.clear dirty 后
       // 用户会误以为已保存，重启应用时参数回落到上次保存的值。
       await api.saveSettings({ config, lastModelRoot: config.modelRoot })
       const s = await api.getStatus()

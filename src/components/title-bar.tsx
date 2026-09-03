@@ -13,10 +13,10 @@ const APP_NAME = 'XXXXXLCat-llama.cpp'
 
 /**
  * 自定义标题栏：窗口 `decorations: false` 后由前端自绘。
- * - 整条为拖动区（在空区域按下左键调用 `startDragging`，双击最大化/还原）；
- * - 软件名右侧嵌入运行状态徽标，点击跳转「控制台」页；
- * - 右侧为最小化 / 最大化(还原) / 关闭，均为非拖动区；
- * - 纯浏览器（`vite dev` 预览）下窗口控制自动降级为无操作，不抛错。
+ * - 整条为拖动区（在空区域按下左键调用 `startDragging`，双击titlebar.maximize/还原）；
+ * - 软件名右侧嵌入console.runtimeStatus徽标，点击跳转「nav.console」页；
+ * - 右侧为titlebar.minimize / titlebar.maximize(还原) / common.close，均为非拖动区；
+ * - 纯common.browse器（`vite dev` 预览）下窗口控制自动降级为无操作，不抛错。
  */
 export function TitleBar({
   status,
@@ -30,7 +30,7 @@ export function TitleBar({
   const navigate = useNavigate()
   const [maximized, setMaximized] = React.useState(false)
 
-  // 同步最大化状态：跟随窗口尺寸变化更新图标（最大化→还原）
+  // 同步titlebar.maximize状态：跟随窗口尺寸变化更新图标（titlebar.maximize→还原）
   React.useEffect(() => {
     if (!isTauriRuntime()) return
     let disposed = false
@@ -60,7 +60,7 @@ export function TitleBar({
       try {
         fn(getCurrentWindow())
       } catch {
-        // 浏览器预览环境无窗口可操作
+        // common.browse器预览环境无窗口可操作
       }
     },
     [],
@@ -95,7 +95,7 @@ export function TitleBar({
     try {
       void getCurrentWindow().startDragging()
     } catch {
-      // 浏览器预览环境无窗口可操作
+      // common.browse器预览环境无窗口可操作
     }
   }
 
@@ -117,8 +117,8 @@ export function TitleBar({
       {status ? (
         <button
           type="button"
-          title={t('控制台')}
-          aria-label={t('控制台')}
+          title={t('nav.console')}
+          aria-label={t('nav.console')}
           onClick={() => navigate('/')}
           className="ml-3 inline-flex cursor-default items-center transition-opacity hover:opacity-80"
         >
@@ -127,14 +127,14 @@ export function TitleBar({
       ) : null}
 
       <div className="ml-auto flex h-full">
-        {winButton(<Minus className="size-4" />, t('最小化'), () =>
+        {winButton(<Minus className="size-4" />, t('titlebar.minimize'), () =>
           control((win) => {
             void win.minimize()
           }),
         )}
         {winButton(
           maximized ? <Copy className="size-3.5" /> : <Square className="size-3.5" />,
-          maximized ? t('向下还原') : t('最大化'),
+          maximized ? t('titlebar.restore') : t('titlebar.maximize'),
           () =>
             control((win) => {
               void win.toggleMaximize()
@@ -142,7 +142,7 @@ export function TitleBar({
         )}
         {winButton(
           <X className="size-4" />,
-          t('关闭'),
+          t('common.close'),
           () =>
             control((win) => {
               void win.close()

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Moon, Sun } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { useI18n, type LocalePref } from '@/lib/i18n'
+import { useI18n, LOCALES, type LocalePref } from '@/lib/i18n'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -45,8 +45,8 @@ export function PreferencesPage() {
       <div className="flex flex-col gap-3 p-3">
       <Card>
         <CardHeader>
-          <CardTitle>{t('语言')}</CardTitle>
-          <CardDescription>{t('选择界面显示语言')}</CardDescription>
+          <CardTitle>{t('prefs.language')}</CardTitle>
+          <CardDescription>{t('prefs.languageDesc')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs
@@ -54,9 +54,11 @@ export function PreferencesPage() {
             onValueChange={(v) => setLocale(v as LocalePref)}
           >
             <TabsList>
-              <TabsTrigger value="system">{t('跟随系统')}</TabsTrigger>
-              <TabsTrigger value="en">English</TabsTrigger>
-              <TabsTrigger value="zh">简体中文</TabsTrigger>
+              {LOCALES.map((loc) => (
+                <TabsTrigger key={loc.value} value={loc.value}>
+                  {loc.value === 'system' ? t('common.followSystem') : loc.endonym}
+                </TabsTrigger>
+              ))}
             </TabsList>
           </Tabs>
         </CardContent>
@@ -64,8 +66,8 @@ export function PreferencesPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('外观')}</CardTitle>
-          <CardDescription>{t('选择主题色与明暗模式')}</CardDescription>
+          <CardTitle>{t('prefs.appearance')}</CardTitle>
+          <CardDescription>{t('prefs.appearanceDesc')}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-row flex-wrap items-center gap-5">
           <div>
@@ -104,11 +106,11 @@ export function PreferencesPage() {
               <TabsList>
                 <TabsTrigger value="light">
                   <Sun className="size-4" />
-                  {t('浅色')}
+                  {t('prefs.light')}
                 </TabsTrigger>
                 <TabsTrigger value="dark">
                   <Moon className="size-4" />
-                  {t('深色')}
+                  {t('prefs.dark')}
                 </TabsTrigger>
               </TabsList>
             </Tabs>

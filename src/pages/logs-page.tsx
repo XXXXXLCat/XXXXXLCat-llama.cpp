@@ -27,10 +27,10 @@ import { useI18n } from '@/lib/i18n'
 const MAX_RENDERED = 1500
 
 const STREAM_FILTERS = [
-  { value: 'all', label: '全部输出' },
-  { value: 'stdout', label: '标准输出' },
-  { value: 'stderr', label: '标准错误' },
-  { value: 'system', label: '启动器消息' },
+  { value: 'all', label: 'logs.all' },
+  { value: 'stdout', label: 'logs.stdout' },
+  { value: 'stderr', label: 'logs.stderr' },
+  { value: 'system', label: 'logs.launcher' },
 ]
 
 export function LogsPage() {
@@ -67,11 +67,11 @@ export function LogsPage() {
       <div className="flex flex-col gap-3 p-3">
       <Card>
         <CardHeader>
-          <CardTitle>{t('日志输出')}</CardTitle>
+          <CardTitle>{t('logs.output')}</CardTitle>
           <CardDescription>
-            {t('显示最近 {n} 行', { n: visible.length })}
+            {t('logs.showLastN', { n: visible.length })}
             {filtered.length > MAX_RENDERED &&
-              t('（共 {n} 行匹配）', { n: filtered.length })}
+              t('logs.matchedN', { n: filtered.length })}
           </CardDescription>
           <CardAction className="flex flex-wrap items-center gap-2">
             <Select value={stream} onValueChange={(v) => setStream(String(v))}>
@@ -88,11 +88,11 @@ export function LogsPage() {
             </Select>
             <Button variant="outline" size="sm" onClick={copyAll}>
               <Copy />
-              {t('复制')}
+              {t('common.copy')}
             </Button>
             <Button variant="destructive" size="sm" onClick={clearLogs}>
               <Trash2 />
-              {t('清空')}
+              {t('common.clear')}
             </Button>
           </CardAction>
         </CardHeader>
@@ -103,7 +103,7 @@ export function LogsPage() {
               <Input
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
-                placeholder={t('过滤日志内容')}
+                placeholder={t('common.filterLog')}
                 className="w-64 pl-7"
               />
             </div>
@@ -113,7 +113,7 @@ export function LogsPage() {
                 checked={autoScroll}
                 onCheckedChange={setAutoScroll}
               />
-              <span className="text-muted-foreground">{t('自动滚动')}</span>
+              <span className="text-muted-foreground">{t('common.autoScroll')}</span>
             </div>
           </div>
 
@@ -121,7 +121,7 @@ export function LogsPage() {
             lines={visible}
             autoScroll={autoScroll}
             className="h-[60vh] min-h-80"
-            emptyHint={t('暂无日志，启动服务后将实时输出')}
+            emptyHint={t('logs.emptyHint')}
           />
         </CardContent>
       </Card>

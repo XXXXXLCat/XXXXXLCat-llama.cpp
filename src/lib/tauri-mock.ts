@@ -1,8 +1,8 @@
 /**
- * 浏览器预览支撑层（仅当运行在纯 Web 环境时启用）。
+ * common.browse器预览支撑层（仅当运行在纯 Web 环境时common.enabled）。
  *
- * Tauri 桌面运行时内，所有命令由 Rust 后端执行；本模块在无 Tauri 的浏览器中
- * 提供行为一致的模拟实现（配置读写 / 模型扫描 / mmproj 匹配 / 服务启动日志流），
+ * Tauri 桌面运行时内，所有命令由 Rust 后端执行；本模块在无 Tauri 的common.browse器中
+ * 提供行为一致的模拟实现（配置读写 / nav.models扫描 / mmproj 匹配 / 服务启动logs.title流），
  * 使 `vite dev` 可独立预览 UI 全流程。数据仅存于 localStorage，不触碰磁盘。
  */
 import type {
@@ -21,7 +21,7 @@ export function isTauriRuntime(): boolean {
 }
 
 /**
- * 监听地址 → 本机可连接地址（镜像 Rust `server::client_host` 与
+ * settings.listenAddr → 本机可连接地址（镜像 Rust `server::client_host` 与
  * `tauri-api.clientHost`）。此处本地实现而非从 tauri-api 导入，是为避免
  * 与该模块形成运行时循环依赖（tauri-api 需要本模块的 createMock）。
  */
@@ -32,8 +32,8 @@ function mockClientHost(host: string): string {
 
 const LS_KEY = 'llama-launcher.mock.v1'
 
-// ------------------------------------------------------------- 真实模型快照
-// 与用户本机 D:\llama.cpp\model 下的三组模型一致，用于预览时的列表与匹配效果。
+// ------------------------------------------------------------- 真实nav.models快照
+// 与用户本机 D:\llama.cpp\model 下的三组nav.models一致，用于预览时的列表与匹配效果。
 const MODEL_ENTRIES: Array<{
   text: { name: string; sizeBytes: number }
   mmproj: { name: string; sizeBytes: number }
@@ -100,8 +100,8 @@ function buildModelFiles(): ModelFile[] {
 }
 
 // ------------------------------------------------------------- 默认配置
-// 与 Rust `LaunchConfig::default()` 保持一致；仅 modelPath 预设为本机真实模型，
-// 便于浏览器预览立即展示完整效果。
+// 与 Rust `LaunchConfig::default()` 保持一致；仅 modelPath 预设为本机真实nav.models，
+// 便于common.browse器预览立即展示完整效果。
 export const DEFAULT_CONFIG: LaunchConfig = {
   llamaDir: 'D:\\llama.cpp\\llama.cpp',
   serverBin: 'llama-server.exe',
@@ -278,7 +278,7 @@ export function createMock(): MockModule {
     const mmprojName = mmprojPath.split(/[\\/]/).pop() || null
     const endpoint = `http://${mockClientHost(config.host)}:${config.port}`
 
-    emitLog('[模拟] 预览模式：以下为浏览器模拟输出，真实运行请使用 Tauri 桌面版', 'system')
+    emitLog('[模拟] 预览模式：以下为common.browse器模拟输出，真实运行请使用 Tauri 桌面版', 'system')
     emitLog(`llama-server.exe --model ${modelPath}`, 'stdout')
     if (mmprojPath) emitLog(`mmproj = ${mmprojPath}`, 'stdout')
 
@@ -316,7 +316,7 @@ export function createMock(): MockModule {
     }
     await sleep(120)
     emitLog(`server: HTTP server listening on ${endpoint}`, 'stdout')
-    emitLog(`[启动器] 服务已就绪，可用浏览器访问 ${endpoint}`, 'system')
+    emitLog(`log.launcherTag 服务已就绪，可用common.browse器访问 ${endpoint}`, 'system')
     listening = true
   }
 
@@ -324,7 +324,7 @@ export function createMock(): MockModule {
     clearTimers()
     listening = false
     if (status.running) {
-      emitLog('[启动器] 正在停止服务...', 'system')
+      emitLog('log.launcherTag 正在console.stopServer...', 'system')
     }
     emitStatus({
       running: false,
@@ -337,7 +337,7 @@ export function createMock(): MockModule {
       endpoint: null,
     })
     if (status.running) {
-      emitLog('[启动器] 服务已停止', 'system')
+      emitLog('log.launcherTag 服务已停止', 'system')
     }
   }
 
@@ -412,7 +412,7 @@ export function createMock(): MockModule {
     },
     async getSystemMetrics() {
       await sleep(80)
-      // 浏览器预览无真实硬件，返回带轻微抖动的拟真数据，便于查看 UI 形态。
+      // common.browse器预览无真实硬件，返回带轻微抖动的拟真数据，便于查看 UI 形态。
       const t = Date.now() / 1000
       const wobble = (base: number, amp: number) =>
         Math.max(0, Math.min(100, base + Math.sin(t / 3) * amp))

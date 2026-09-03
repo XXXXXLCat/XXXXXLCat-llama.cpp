@@ -7,7 +7,7 @@ import App from './App.tsx'
 import { applyInitialTheme } from '@/lib/theme'
 import { applyInitialPreferences } from '@/lib/i18n'
 
-// 在 React 挂载前应用持久化的主题与语言，避免首屏闪烁
+// 在 React 挂载前应用持久化的主题与prefs.language，避免首屏闪烁
 applyInitialTheme()
 applyInitialPreferences()
 

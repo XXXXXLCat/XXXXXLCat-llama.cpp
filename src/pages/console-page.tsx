@@ -28,7 +28,7 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
   )
 }
 
-/** 带数值的进度条（CPU / 内存 / GPU 利用率 / 显存 / 温度 通用磁贴） */
+/** 带数值的进度条（CPU / console.memory / console.gpuUtil / console.vram / settings.tempLabel 通用磁贴） */
 function MetricBar({
   value,
   label,
@@ -77,9 +77,9 @@ export function ConsolePage() {
   }, [status.running])
 
   const uptime = status.startedAt ? formatDuration(now - status.startedAt) : '—'
-  const modelName = config.modelPath ? fileNameOf(config.modelPath) : t('未选择')
+  const modelName = config.modelPath ? fileNameOf(config.modelPath) : t('common.notSelected')
   const modelSize = models.find((m) => m.path === config.modelPath)?.sizeBytes
-  const mmprojName = config.mmprojPath ? fileNameOf(config.mmprojPath) : t('未启用')
+  const mmprojName = config.mmprojPath ? fileNameOf(config.mmprojPath) : t('common.notEnabled')
   const mmprojSize = config.mmprojPath
     ? models.find((m) => m.path === config.mmprojPath)?.sizeBytes
     : undefined
@@ -99,7 +99,7 @@ export function ConsolePage() {
             disabled={busy || (!status.running && !config.modelPath)}
           >
             {status.running ? <Square /> : <Play />}
-            {status.running ? t('停止服务') : t('启动服务')}
+            {status.running ? t('console.stopServer') : t('console.startServer')}
           </Button>
         </div>
       </header>
@@ -109,12 +109,12 @@ export function ConsolePage() {
       {actionError && (
         <Alert variant="destructive">
           <TriangleAlert />
-          <AlertTitle>{t('操作失败')}</AlertTitle>
+          <AlertTitle>{t('common.failed')}</AlertTitle>
           <AlertDescription className="flex flex-col gap-2">
             <span className="whitespace-pre-wrap">{actionError}</span>
             <div>
               <Button variant="outline" size="sm" onClick={dismissError}>
-                {t('知道了')}
+                {t('common.gotIt')}
               </Button>
             </div>
           </AlertDescription>
@@ -124,13 +124,13 @@ export function ConsolePage() {
       {!config.modelPath && (
         <Alert>
           <TriangleAlert />
-          <AlertTitle>{t('尚未选择主模型')}</AlertTitle>
+          <AlertTitle>{t('console.noModelSelected')}</AlertTitle>
           <AlertDescription>
-            {t('请先到')}
+            {t('console.goTo')}
             <Button variant="link" size="sm" render={<Link to="/models" />}>
-              {t('模型')}
+              {t('nav.models')}
             </Button>
-            {t('页面选择一个 GGUF 主模型。')}
+            {t('console.pickModel')}
           </AlertDescription>
         </Alert>
       )}
@@ -138,36 +138,36 @@ export function ConsolePage() {
       <div className="grid gap-3 lg:grid-cols-3">
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>{t('运行状态')}</CardTitle>
-            <CardDescription>{t('进程信息与服务地址')}</CardDescription>
+            <CardTitle>{t('console.runtimeStatus')}</CardTitle>
+            <CardDescription>{t('console.processInfo')}</CardDescription>
             <CardAction>
               <Button
                 variant="outline"
                 disabled={!endpointUp || !config.webui}
-                title={config.webui ? undefined : t('内置 Web UI 已在参数设置中关闭')}
+                title={config.webui ? undefined : t('settings.webuiDisabledHint')}
                 onClick={() => void api.openInShell(status.endpoint ?? endpoint)}
               >
                 <ExternalLink />
-                {t('打开 Web UI')}
+                {t('console.openWebUI')}
               </Button>
             </CardAction>
           </CardHeader>
           <CardContent>
             <div className="grid gap-x-8 sm:grid-cols-2">
-              <InfoRow label={t('服务地址')}>{endpoint}</InfoRow>
-              <InfoRow label={t('进程 ID')}>{status.pid ?? '—'}</InfoRow>
-              <InfoRow label={t('运行时长')}>{uptime}</InfoRow>
-              <InfoRow label={t('退出码')}>
+              <InfoRow label={t('console.endpoint')}>{endpoint}</InfoRow>
+              <InfoRow label={t('console.pid')}>{status.pid ?? '—'}</InfoRow>
+              <InfoRow label={t('console.uptime')}>{uptime}</InfoRow>
+              <InfoRow label={t('console.exitCode')}>
                 {status.exitCode === null
                   ? '—'
                   : status.exitCode === 0
-                    ? t('0（正常）')
-                    : t('{code}（异常）', { code: status.exitCode })}
+                    ? t('console.exitNormal')
+                    : t('console.exitError', { code: status.exitCode })}
               </InfoRow>
-              <InfoRow label={t('连续批处理')}>
-                {config.contBatching ? t('启用') : t('禁用')}
+              <InfoRow label={t('console.continuousBatching')}>
+                {config.contBatching ? t('common.enabled') : t('common.disabled')}
               </InfoRow>
-              <InfoRow label={t('上下文长度')}>
+              <InfoRow label={t('console.contextLength')}>
                 {config.ctxSize.toLocaleString()} tokens
               </InfoRow>
             </div>
@@ -176,18 +176,18 @@ export function ConsolePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>{t('当前模型')}</CardTitle>
-            <CardDescription>{t('主模型与视觉投影')}</CardDescription>
+            <CardTitle>{t('console.currentModel')}</CardTitle>
+            <CardDescription>{t('console.mainAndVision')}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col">
-              <InfoRow label={t('主模型')}>
+              <InfoRow label={t('console.mainModel')}>
                 <span title={config.modelPath}>{modelName}</span>
               </InfoRow>
-              <InfoRow label={t('视觉模型')}>
+              <InfoRow label={t('console.visionModel')}>
                 <span title={config.mmprojPath}>{mmprojName}</span>
               </InfoRow>
-              <InfoRow label={t('文件体积')}>
+              <InfoRow label={t('console.fileSize')}>
                 {fileVolume}
               </InfoRow>
             </div>
@@ -197,9 +197,9 @@ export function ConsolePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('系统监控')}</CardTitle>
+          <CardTitle>{t('console.systemMonitor')}</CardTitle>
           <CardDescription>
-            {t('CPU / 内存 / GPU 利用率 / 显存 / 温度（每 2 秒刷新）')}
+            {t('console.monitorDesc')}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -212,20 +212,20 @@ export function ConsolePage() {
                 </p>
               )}
               <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
-                <MetricBar value={metrics.cpu_usage} label={t('CPU 占用')} />
+                <MetricBar value={metrics.cpu_usage} label={t('console.cpuUsage')} />
                 <MetricBar
                   value={
                     metrics.memory_total
                       ? (metrics.memory_used / metrics.memory_total) * 100
                       : 0
                   }
-                  label={t('内存')}
+                  label={t('console.memory')}
                   detail={`${formatBytes(metrics.memory_used)} / ${formatBytes(metrics.memory_total)}`}
                 />
 
                 {metrics.gpus.length === 0 ? (
                   <div className="flex items-center justify-center rounded-lg border border-dashed p-6 text-muted-foreground">
-                    {t('未检测到 GPU')}
+                    {t('console.noGpu')}
                   </div>
                 ) : (
                   metrics.gpus.map((gpu, i) => (
@@ -234,8 +234,8 @@ export function ConsolePage() {
                         value={gpu.utilization ?? 0}
                         label={
                           metrics.gpus.length > 1
-                            ? t('GPU {i} 利用率', { i: i + 1 })
-                            : t('GPU 利用率')
+                            ? t('console.gpuUtilI', { i: i + 1 })
+                            : t('console.gpuUtil')
                         }
                       />
                       <MetricBar
@@ -244,7 +244,7 @@ export function ConsolePage() {
                             ? (gpu.memory_used / gpu.memory_total) * 100
                             : 0
                         }
-                        label={t('显存')}
+                        label={t('console.vram')}
                         detail={
                           gpu.memory_used != null && gpu.memory_total != null
                             ? `${formatBytes(gpu.memory_used)} / ${formatBytes(gpu.memory_total)}`
@@ -253,7 +253,7 @@ export function ConsolePage() {
                       />
                       <MetricBar
                         value={gpu.temperature != null ? gpu.temperature : 0}
-                        label={t('温度')}
+                        label={t('settings.tempLabel')}
                         detail={gpu.temperature != null ? `${gpu.temperature} °C` : '—'}
                       />
                     </React.Fragment>
@@ -262,18 +262,18 @@ export function ConsolePage() {
               </div>
             </>
           ) : (
-            <p className="text-muted-foreground">{t('正在读取硬件信息…')}</p>
+            <p className="text-muted-foreground">{t('console.readingHardware')}</p>
           )}
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader>
-          <CardTitle>{t('实时日志')}</CardTitle>
-          <CardDescription>{t('最近 {n} 行', { n: tail.length })}</CardDescription>
+          <CardTitle>{t('console.liveLogs')}</CardTitle>
+          <CardDescription>{t('console.lastN', { n: tail.length })}</CardDescription>
           <CardAction>
             <Button variant="outline" size="sm" render={<Link to="/logs" />}>
-              {t('查看全部')}
+              {t('common.viewAll')}
             </Button>
           </CardAction>
         </CardHeader>
@@ -281,17 +281,17 @@ export function ConsolePage() {
           <LogView
             lines={tail}
             className="h-72"
-            emptyHint={t('服务启动后将在此显示日志')}
+            emptyHint={t('console.serviceStartLogHint')}
           />
         </CardContent>
       </Card>
 
       {dirty && (
         <div className="flex items-center justify-between rounded-lg border border-dashed p-3">
-          <span className="text-muted-foreground">{t('参数有未保存的修改')}</span>
+          <span className="text-muted-foreground">{t('common.paramsUnsaved')}</span>
           <Button variant="outline" onClick={() => void saveConfig()}>
             <Save />
-            {t('保存参数')}
+            {t('common.save')}
           </Button>
         </div>
       )}

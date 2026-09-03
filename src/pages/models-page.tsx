@@ -49,23 +49,23 @@ const CONFIDENCE_META: Record<
   { label: string; hint: string; variant: 'default' | 'secondary' | 'outline' | 'destructive' }
 > = {
   exact: {
-    label: '精确匹配',
-    hint: '视觉模型与主模型名称高度一致，可直接启用。',
+    label: 'models.matchExact',
+    hint: 'models.hintExact',
     variant: 'default',
   },
   unique: {
-    label: '目录唯一',
-    hint: '主模型所在目录内仅有一个视觉投影文件，已按同目录关系自动选用。',
+    label: 'models.matchDirUnique',
+    hint: 'models.hintUnique',
     variant: 'secondary',
   },
   weak: {
-    label: '弱匹配',
-    hint: '存在多个候选且名称相关性较低，建议人工确认后再启动。',
+    label: 'models.matchWeak',
+    hint: 'models.hintWeak',
     variant: 'outline',
   },
   none: {
-    label: '未找到',
-    hint: '未能在模型目录中找到可用的视觉投影文件。',
+    label: 'models.matchNotFound',
+    hint: 'models.hintNotFound',
     variant: 'destructive',
   },
 }
@@ -129,12 +129,12 @@ export function ModelsPage() {
       <div className="flex flex-col gap-3 p-3">
       <Card>
         <CardHeader>
-          <CardTitle>{t('模型目录')}</CardTitle>
-          <CardDescription>{t('扫描目录下的所有 GGUF 文件')}</CardDescription>
+          <CardTitle>{t('models.modelDir')}</CardTitle>
+          <CardDescription>{t('models.scanDirGguf')}</CardDescription>
           <CardAction>
             <Button variant="outline" onClick={() => void refreshModels()} disabled={scanning}>
               {scanning ? <LoaderCircle className="animate-spin" /> : <RefreshCw />}
-              {t('重新扫描')}
+              {t('common.rescan')}
             </Button>
           </CardAction>
         </CardHeader>
@@ -143,26 +143,26 @@ export function ModelsPage() {
             <Input
               value={config.modelRoot}
               onChange={(e) => updateConfig({ modelRoot: e.target.value })}
-              placeholder={t('模型根目录，例如 D:\\llama.cpp\\model')}
+              placeholder={t('models.rootPlaceholder')}
             />
             <Button variant="outline" onClick={() => void browseModelRoot()}>
               <FolderOpen />
-              {t('浏览')}
+              {t('common.browse')}
             </Button>
           </div>
           {scanError && (
             <Alert variant="destructive" className="mt-3">
               <TriangleAlert />
-              <AlertTitle>{t('扫描失败')}</AlertTitle>
+              <AlertTitle>{t('common.scanFailed')}</AlertTitle>
               <AlertDescription>{scanError}</AlertDescription>
             </Alert>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
             <Badge variant="outline">
-              {t('主模型')} {textModels.length}
+              {t('console.mainModel')} {textModels.length}
             </Badge>
             <Badge variant="outline">
-              {t('视觉投影')} {visionModels.length}
+              {t('models.vision')} {visionModels.length}
             </Badge>
           </div>
         </CardContent>
@@ -171,15 +171,15 @@ export function ModelsPage() {
       <div className="grid gap-3 lg:grid-cols-5">
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>{t('主模型')}</CardTitle>
-            <CardDescription>{t('共 {n} 个文本模型', { n: textModels.length })}</CardDescription>
+            <CardTitle>{t('console.mainModel')}</CardTitle>
+            <CardDescription>{t('models.totalTextModels', { n: textModels.length })}</CardDescription>
             <CardAction>
               <div className="relative">
                 <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder={t('搜索')}
+                  placeholder={t('common.search')}
                   className="w-40 pl-7"
                 />
               </div>
@@ -189,11 +189,11 @@ export function ModelsPage() {
             {scanning && textModels.length === 0 ? (
               <div className="flex items-center gap-2 py-8 text-muted-foreground">
                 <LoaderCircle className="animate-spin" />
-                {t('正在扫描模型目录…')}
+                {t('models.scanning')}
               </div>
             ) : grouped.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
-                {t('未找到 GGUF 主模型，请检查模型目录')}
+                {t('models.noGgufMain')}
               </div>
             ) : (
               <div className="flex flex-col gap-3">
@@ -226,7 +226,7 @@ export function ModelsPage() {
                             {selected ? (
                               <Badge>
                                 <Check />
-                                {t('已选择')}
+                                {t('common.selected')}
                               </Badge>
                             ) : null}
                           </ItemActions>
@@ -242,15 +242,15 @@ export function ModelsPage() {
 
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>{t('视觉模型匹配')}</CardTitle>
-            <CardDescription>{t('多模态投影（mmproj）')}</CardDescription>
+            <CardTitle>{t('models.visionMatch')}</CardTitle>
+            <CardDescription>{t('models.multimodalProjector')}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex flex-col gap-1">
-                <span>{t('自动匹配视觉模型')}</span>
+                <span>{t('models.autoMatchVision')}</span>
                 <span className="text-muted-foreground">
-                  {t('依据主模型名称与同目录关系自动选取')}
+                  {t('models.autoMatchDesc')}
                 </span>
               </div>
               <Switch
@@ -267,7 +267,7 @@ export function ModelsPage() {
                   <Badge variant={meta.variant}>{t(meta.label)}</Badge>
                   {mmprojMatch && (
                     <span className="text-muted-foreground">
-                      {t('相关度 {p}%', { p: Math.round(mmprojMatch.score * 100) })}
+                      {t('models.relevancePct', { p: Math.round(mmprojMatch.score * 100) })}
                     </span>
                   )}
                 </div>
@@ -283,14 +283,14 @@ export function ModelsPage() {
                         size="sm"
                         onClick={() => void api.revealInExplorer(config.mmprojPath)}
                       >
-                        {t('打开文件位置')}
+                        {t('models.openFileLocation')}
                       </Button>
                     </div>
                   </>
                 ) : (
                   <Alert>
                     <TriangleAlert />
-                    <AlertTitle>{t('未找到可用视觉模型')}</AlertTitle>
+                    <AlertTitle>{t('models.noVisionFound')}</AlertTitle>
                     <AlertDescription>{t(meta.hint)}</AlertDescription>
                   </Alert>
                 )}
@@ -300,7 +300,7 @@ export function ModelsPage() {
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <span className="text-muted-foreground">{t('手动指定视觉投影文件')}</span>
+                <span className="text-muted-foreground">{t('models.manualVision')}</span>
                 <Select
                   value={config.mmprojPath || '__none__'}
                   onValueChange={(value) =>
@@ -311,7 +311,7 @@ export function ModelsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">{t('不启用视觉模型')}</SelectItem>
+                    <SelectItem value="__none__">{t('models.noVision')}</SelectItem>
                     {visionModels.map((m) => (
                       <SelectItem key={m.path} value={m.path}>
                         {m.name}
@@ -321,7 +321,7 @@ export function ModelsPage() {
                 </Select>
                 {visionModels.length === 0 && (
                   <p className="text-muted-foreground">
-                    {t('当前模型目录中没有检测到视觉投影文件')}
+                    {t('models.noVisionInDir')}
                   </p>
                 )}
               </div>

@@ -20,7 +20,7 @@ function BootScreen() {
       <div className="flex min-h-0 flex-1 items-center justify-center">
         <span className="flex items-center gap-2 text-muted-foreground">
           <LoaderCircle className="animate-spin" />
-          {t('正在读取配置…')}
+          {t('app.loadingConfig')}
         </span>
       </div>
     </div>
