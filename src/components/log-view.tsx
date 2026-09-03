@@ -1,0 +1,73 @@
+import * as React from 'react'
+
+import { ScrollArea } from '@/components/ui/scroll-area'
+import { formatTime, type LogLine } from '@/lib/tauri-api'
+
+function isErrorLine(text: string) {
+  const t = text.toLowerCase()
+  return t.includes('error') || t.includes('failed') || t.includes('fatal')
+}
+
+export function LogView({
+  lines,
+  autoScroll = true,
+  showTimestamps = true,
+  className,
+  emptyHint = '暂无日志',
+}: {
+  lines: LogLine[]
+  autoScroll?: boolean
+  showTimestamps?: boolean
+  className?: string
+  emptyHint?: string
+}) {
+  const bottomRef = React.useRef<HTMLDivElement>(null)
+
+  React.useEffect(() => {
+    if (autoScroll) {
+      bottomRef.current?.scrollIntoView({ block: 'end' })
+    }
+  }, [lines, autoScroll])
+
+  if (lines.length === 0) {
+    return (
+      <div
+        className={`flex min-h-24 items-center justify-center rounded-lg border bg-muted/40 p-4 ${className ?? ''}`}
+      >
+        <p className="text-muted-foreground">{emptyHint}</p>
+      </div>
+    )
+  }
+
+  return (
+    <ScrollArea
+      className={`rounded-lg border bg-muted/40 ${className ?? ''}`}
+      // The terminal-style region is the documented exception to the default
+      // typography rules (monospace + small size).
+      data-slot="log-view"
+    >
+      <div className="p-3 font-mono text-xs leading-relaxed">
+        {lines.map((line) => (
+          <div key={line.id} className="flex gap-2 whitespace-pre-wrap break-all">
+            {showTimestamps && (
+              <span className="shrink-0 tabular-nums text-muted-foreground">
+                {formatTime(line.ts)}
+              </span>
+            )}
+            {line.stream === 'system' ? (
+              <span className="shrink-0 text-muted-foreground">[启动器]</span>
+            ) : (
+              <span className="shrink-0 text-muted-foreground">
+                [{line.stream === 'stderr' ? 'err' : 'out'}]
+              </span>
+            )}
+            <span className={isErrorLine(line.text) ? 'text-destructive' : undefined}>
+              {line.text}
+            </span>
+          </div>
+        ))}
+        <div ref={bottomRef} />
+      </div>
+    </ScrollArea>
+  )
+}
