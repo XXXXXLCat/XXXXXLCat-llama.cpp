@@ -12,7 +12,7 @@ const APP_NAME = 'XXXXXLCat-llama.cpp'
 
 /**
  * 自定义标题栏：窗口 `decorations: false` 后由前端自绘。
- * - 整条为拖动区（`data-tauri-drag-region`，含双击最大化/还原）；
+ * - 整条为拖动区（在空区域按下左键调用 `startDragging`，双击最大化/还原）；
  * - 软件名右侧嵌入运行状态徽标，点击跳转「控制台」页；
  * - 右侧为最小化 / 最大化(还原) / 关闭，均为非拖动区；
  * - 纯浏览器（`vite dev` 预览）下窗口控制自动降级为无操作，不抛错。
@@ -74,10 +74,9 @@ export function TitleBar({
       type="button"
       title={title}
       aria-label={title}
-      data-tauri-drag-region={false}
       onClick={fn}
       className={cn(
-        'flex h-full w-11 items-center justify-center text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
+        'flex h-full w-11 cursor-default items-center justify-center text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground',
         extra,
       )}
     >
@@ -85,10 +84,31 @@ export function TitleBar({
     </button>
   )
 
+  // 在标题栏空区域按下左键拖动窗口（程序化调用，比原生 data-tauri-drag-region
+  // 更稳定，且不会与窗口控制按钮冲突）。
+  const onBarMouseDown = (e: React.MouseEvent) => {
+    if (e.button !== 0) return
+    if ((e.target as HTMLElement).closest('button')) return
+    if (!isTauriRuntime()) return
+    try {
+      void getCurrentWindow().startDragging()
+    } catch {
+      // 浏览器预览环境无窗口可操作
+    }
+  }
+
+  const onBarDoubleClick = (e: React.MouseEvent) => {
+    if ((e.target as HTMLElement).closest('button')) return
+    control((win) => {
+      void win.toggleMaximize()
+    })
+  }
+
   return (
     <div
-      data-tauri-drag-region
-      className="flex h-9 shrink-0 select-none items-center border-b bg-background pl-3"
+      onMouseDown={onBarMouseDown}
+      onDoubleClick={onBarDoubleClick}
+      className="flex h-9 shrink-0 select-none cursor-default items-center border-b bg-background pl-3"
     >
       <span className="text-xs font-medium text-muted-foreground">{APP_NAME}</span>
 
@@ -97,9 +117,8 @@ export function TitleBar({
           type="button"
           title="控制台"
           aria-label="控制台"
-          data-tauri-drag-region={false}
           onClick={() => navigate('/')}
-          className="ml-3 inline-flex items-center transition-opacity hover:opacity-80"
+          className="ml-3 inline-flex cursor-default items-center transition-opacity hover:opacity-80"
         >
           <StatusPill status={status} endpointUp={endpointUp ?? false} />
         </button>

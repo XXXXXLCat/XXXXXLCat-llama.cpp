@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom'
 import { LoaderCircle } from 'lucide-react'
 
 import { AppSidebar } from '@/components/app-sidebar'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { TitleBar } from '@/components/title-bar'
 import { LauncherProvider, useLauncher } from '@/hooks/use-launcher'
 import { ConsolePage } from '@/pages/console-page'
@@ -31,14 +32,16 @@ function Shell() {
       <TitleBar status={status} endpointUp={endpointUp} />
       <div className="flex min-h-0 flex-1 overflow-hidden">
         <AppSidebar />
-        <main className="min-h-0 flex-1 overflow-y-auto">
-          <Routes>
-            <Route path="/" element={<ConsolePage />} />
-            <Route path="/models" element={<ModelsPage />} />
-            <Route path="/logs" element={<LogsPage />} />
-            <Route path="/settings" element={<SettingsPage />} />
-          </Routes>
-        </main>
+        <ScrollArea className="min-h-0 flex-1">
+          <main className="min-h-full">
+            <Routes>
+              <Route path="/" element={<ConsolePage />} />
+              <Route path="/models" element={<ModelsPage />} />
+              <Route path="/logs" element={<LogsPage />} />
+              <Route path="/settings" element={<SettingsPage />} />
+            </Routes>
+          </main>
+        </ScrollArea>
       </div>
     </div>
   )

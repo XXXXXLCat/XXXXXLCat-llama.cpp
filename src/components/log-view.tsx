@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { formatTime, type LogLine } from '@/lib/tauri-api'
 
 function isErrorLine(text: string) {
@@ -40,8 +39,8 @@ export function LogView({
   }
 
   return (
-    <ScrollArea
-      className={`rounded-lg border bg-muted/40 ${className ?? ''}`}
+    <div
+      className={`overflow-y-auto rounded-lg border bg-muted/40 ${className ?? ''}`}
       // The terminal-style region is the documented exception to the default
       // typography rules (monospace + small size).
       data-slot="log-view"
@@ -68,6 +67,6 @@ export function LogView({
         ))}
         <div ref={bottomRef} />
       </div>
-    </ScrollArea>
+    </div>
   )
 }

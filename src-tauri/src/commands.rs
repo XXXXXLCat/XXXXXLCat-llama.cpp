@@ -180,3 +180,13 @@ pub fn reveal_in_explorer(path: String) -> Result<(), String> {
         Err("当前平台未实现".to_string())
     }
 }
+
+/// 采集系统硬件指标：CPU 占用、物理内存、GPU（名称/利用率/显存/温度）。
+/// 失败时不抛错，返回尽力可得的数据；无 NVIDIA 显卡时 `gpus` 为空。
+///
+/// 使用 `async` 命令：Tauri 在异步运行时线程池执行，不会阻塞 Webview 主线程，
+/// 避免每 2 秒轮询时界面出现可感知的卡顿。
+#[tauri::command]
+pub async fn get_system_metrics() -> crate::metrics::SystemMetrics {
+    crate::metrics::collect()
+}

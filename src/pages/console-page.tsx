@@ -5,6 +5,7 @@ import { ExternalLink, Play, Save, Square, TriangleAlert } from 'lucide-react'
 import { LogView } from '@/components/log-view'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
+import { Progress } from '@/components/ui/progress'
 import {
   Card,
   CardAction,
@@ -26,12 +27,35 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
   )
 }
 
+/** 带数值的进度条（CPU / 内存 / GPU 利用率 / 显存 / 温度 通用磁贴） */
+function MetricBar({
+  value,
+  label,
+  detail,
+}: {
+  value: number
+  label: string
+  detail?: string
+}) {
+  const clamped = Math.max(0, Math.min(100, value))
+  return (
+    <div className="space-y-1">
+      <div className="flex items-baseline justify-between gap-2">
+        <span className="text-muted-foreground">{label}</span>
+        <span className="tabular-nums text-sm">{detail ?? `${clamped.toFixed(0)}%`}</span>
+      </div>
+      <Progress value={clamped} />
+    </div>
+  )
+}
+
 export function ConsolePage() {
   const {
     config,
     status,
     logs,
     endpointUp,
+    metrics,
     busy,
     dirty,
     actionError,
@@ -175,6 +199,71 @@ export function ConsolePage() {
           </CardContent>
         </Card>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>系统监控</CardTitle>
+          <CardDescription>CPU / 内存 / GPU 利用率 / 显存 / 温度（每 2 秒刷新）</CardDescription>
+        </CardHeader>
+        <CardContent>
+          {metrics ? (
+            <>
+              {metrics.gpus.length > 0 && (
+                <p className="mb-3 text-xs text-muted-foreground">
+                  GPU：{metrics.gpus.map((g) => g.name).join('、')}
+                </p>
+              )}
+              <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2 lg:grid-cols-3">
+                <MetricBar value={metrics.cpu_usage} label="CPU 占用" />
+                <MetricBar
+                  value={
+                    metrics.memory_total
+                      ? (metrics.memory_used / metrics.memory_total) * 100
+                      : 0
+                  }
+                  label="内存"
+                  detail={`${formatBytes(metrics.memory_used)} / ${formatBytes(metrics.memory_total)}`}
+                />
+
+                {metrics.gpus.length === 0 ? (
+                  <div className="flex items-center justify-center rounded-lg border border-dashed p-6 text-muted-foreground">
+                    未检测到 GPU
+                  </div>
+                ) : (
+                  metrics.gpus.map((gpu, i) => (
+                    <React.Fragment key={i}>
+                      <MetricBar
+                        value={gpu.utilization ?? 0}
+                        label={metrics.gpus.length > 1 ? `GPU ${i + 1} 利用率` : 'GPU 利用率'}
+                      />
+                      <MetricBar
+                        value={
+                          gpu.memory_total && gpu.memory_used != null
+                            ? (gpu.memory_used / gpu.memory_total) * 100
+                            : 0
+                        }
+                        label="显存"
+                        detail={
+                          gpu.memory_used != null && gpu.memory_total != null
+                            ? `${formatBytes(gpu.memory_used)} / ${formatBytes(gpu.memory_total)}`
+                            : '—'
+                        }
+                      />
+                      <MetricBar
+                        value={gpu.temperature != null ? gpu.temperature : 0}
+                        label="温度"
+                        detail={gpu.temperature != null ? `${gpu.temperature} °C` : '—'}
+                      />
+                    </React.Fragment>
+                  ))
+                )}
+              </div>
+            </>
+          ) : (
+            <p className="text-muted-foreground">正在读取硬件信息…</p>
+          )}
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
