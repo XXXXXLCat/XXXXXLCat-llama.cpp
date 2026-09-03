@@ -54,3 +54,9 @@ export function setMode(mode: ThemeMode) {
   localStorage.setItem(MODE_KEY, mode)
   document.documentElement.classList.toggle('dark', mode === 'dark')
 }
+
+/** 应用启动时的初始主题（在 React 挂载前调用，避免闪烁） */
+export function applyInitialTheme() {
+  setTheme(getStoredTheme())
+  setMode(getStoredMode())
+}

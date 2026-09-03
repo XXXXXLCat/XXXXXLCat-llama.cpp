@@ -6,6 +6,7 @@ import { getCurrentWindow } from '@tauri-apps/api/window'
 import { StatusPill } from '@/components/status-pill'
 import { cn } from '@/lib/utils'
 import { isTauriRuntime } from '@/lib/tauri-mock'
+import { useI18n } from '@/lib/i18n'
 import type { ServerStatus } from '@/lib/tauri-api'
 
 const APP_NAME = 'XXXXXLCat-llama.cpp'
@@ -25,6 +26,7 @@ export function TitleBar({
   status?: ServerStatus
   endpointUp?: boolean
 }) {
+  const { t } = useI18n()
   const navigate = useNavigate()
   const [maximized, setMaximized] = React.useState(false)
 
@@ -115,8 +117,8 @@ export function TitleBar({
       {status ? (
         <button
           type="button"
-          title="控制台"
-          aria-label="控制台"
+          title={t('控制台')}
+          aria-label={t('控制台')}
           onClick={() => navigate('/')}
           className="ml-3 inline-flex cursor-default items-center transition-opacity hover:opacity-80"
         >
@@ -125,14 +127,14 @@ export function TitleBar({
       ) : null}
 
       <div className="ml-auto flex h-full">
-        {winButton(<Minus className="size-4" />, '最小化', () =>
+        {winButton(<Minus className="size-4" />, t('最小化'), () =>
           control((win) => {
             void win.minimize()
           }),
         )}
         {winButton(
           maximized ? <Copy className="size-3.5" /> : <Square className="size-3.5" />,
-          maximized ? '向下还原' : '最大化',
+          maximized ? t('向下还原') : t('最大化'),
           () =>
             control((win) => {
               void win.toggleMaximize()
@@ -140,7 +142,7 @@ export function TitleBar({
         )}
         {winButton(
           <X className="size-4" />,
-          '关闭',
+          t('关闭'),
           () =>
             control((win) => {
               void win.close()

@@ -36,9 +36,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { useLauncher } from '@/hooks/use-launcher'
+import { useI18n } from '@/lib/i18n'
 import { api, dirNameOf, fileNameOf, formatBytes } from '@/lib/tauri-api'
 import type { MatchConfidence, ModelFile } from '@/lib/tauri-api'
 
@@ -79,6 +81,7 @@ function groupByDir(models: ModelFile[]) {
 }
 
 export function ModelsPage() {
+  const { t } = useI18n()
   const {
     config,
     models,
@@ -121,22 +124,17 @@ export function ModelsPage() {
   const meta = CONFIDENCE_META[confidence]
 
   return (
-    <div className="flex flex-col gap-4 p-3">
-      <div>
-        <h1 className="text-xl font-medium">模型</h1>
-        <p className="text-muted-foreground">
-          选择主模型，系统会自动匹配同目录的视觉投影（mmproj）文件
-        </p>
-      </div>
-
+    <div className="flex h-full flex-col">
+      <ScrollArea className="min-h-0 flex-1">
+      <div className="flex flex-col gap-3 p-3">
       <Card>
         <CardHeader>
-          <CardTitle>模型目录</CardTitle>
-          <CardDescription>扫描目录下的所有 GGUF 文件</CardDescription>
+          <CardTitle>{t('模型目录')}</CardTitle>
+          <CardDescription>{t('扫描目录下的所有 GGUF 文件')}</CardDescription>
           <CardAction>
             <Button variant="outline" onClick={() => void refreshModels()} disabled={scanning}>
               {scanning ? <LoaderCircle className="animate-spin" /> : <RefreshCw />}
-              重新扫描
+              {t('重新扫描')}
             </Button>
           </CardAction>
         </CardHeader>
@@ -145,39 +143,43 @@ export function ModelsPage() {
             <Input
               value={config.modelRoot}
               onChange={(e) => updateConfig({ modelRoot: e.target.value })}
-              placeholder="模型根目录，例如 D:\llama.cpp\model"
+              placeholder={t('模型根目录，例如 D:\\llama.cpp\\model')}
             />
             <Button variant="outline" onClick={() => void browseModelRoot()}>
               <FolderOpen />
-              浏览
+              {t('浏览')}
             </Button>
           </div>
           {scanError && (
             <Alert variant="destructive" className="mt-3">
               <TriangleAlert />
-              <AlertTitle>扫描失败</AlertTitle>
+              <AlertTitle>{t('扫描失败')}</AlertTitle>
               <AlertDescription>{scanError}</AlertDescription>
             </Alert>
           )}
           <div className="mt-3 flex flex-wrap gap-2">
-            <Badge variant="outline">主模型 {textModels.length}</Badge>
-            <Badge variant="outline">视觉投影 {visionModels.length}</Badge>
+            <Badge variant="outline">
+              {t('主模型')} {textModels.length}
+            </Badge>
+            <Badge variant="outline">
+              {t('视觉投影')} {visionModels.length}
+            </Badge>
           </div>
         </CardContent>
       </Card>
 
-      <div className="grid gap-4 lg:grid-cols-5">
+      <div className="grid gap-3 lg:grid-cols-5">
         <Card className="lg:col-span-3">
           <CardHeader>
-            <CardTitle>主模型</CardTitle>
-            <CardDescription>共 {textModels.length} 个文本模型</CardDescription>
+            <CardTitle>{t('主模型')}</CardTitle>
+            <CardDescription>{t('共 {n} 个文本模型', { n: textModels.length })}</CardDescription>
             <CardAction>
               <div className="relative">
                 <Search className="pointer-events-none absolute top-1/2 left-2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  placeholder="搜索"
+                  placeholder={t('搜索')}
                   className="w-40 pl-7"
                 />
               </div>
@@ -187,14 +189,14 @@ export function ModelsPage() {
             {scanning && textModels.length === 0 ? (
               <div className="flex items-center gap-2 py-8 text-muted-foreground">
                 <LoaderCircle className="animate-spin" />
-                正在扫描模型目录…
+                {t('正在扫描模型目录…')}
               </div>
             ) : grouped.length === 0 ? (
               <div className="py-8 text-center text-muted-foreground">
-                未找到 GGUF 主模型，请检查模型目录
+                {t('未找到 GGUF 主模型，请检查模型目录')}
               </div>
             ) : (
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3">
                 {grouped.map(([dir, items]) => (
                   <div key={dir} className="flex flex-col gap-1">
                     <p className="px-1 text-muted-foreground">{dir}</p>
@@ -224,7 +226,7 @@ export function ModelsPage() {
                             {selected ? (
                               <Badge>
                                 <Check />
-                                已选择
+                                {t('已选择')}
                               </Badge>
                             ) : null}
                           </ItemActions>
@@ -240,15 +242,15 @@ export function ModelsPage() {
 
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle>视觉模型匹配</CardTitle>
-            <CardDescription>多模态投影（mmproj）</CardDescription>
+            <CardTitle>{t('视觉模型匹配')}</CardTitle>
+            <CardDescription>{t('多模态投影（mmproj）')}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex flex-col gap-1">
-                <span>自动匹配视觉模型</span>
+                <span>{t('自动匹配视觉模型')}</span>
                 <span className="text-muted-foreground">
-                  依据主模型名称与同目录关系自动选取
+                  {t('依据主模型名称与同目录关系自动选取')}
                 </span>
               </div>
               <Switch
@@ -262,10 +264,10 @@ export function ModelsPage() {
             {config.autoMmproj ? (
               <div className="flex flex-col gap-2">
                 <div className="flex items-center gap-2">
-                  <Badge variant={meta.variant}>{meta.label}</Badge>
+                  <Badge variant={meta.variant}>{t(meta.label)}</Badge>
                   {mmprojMatch && (
                     <span className="text-muted-foreground">
-                      相关度 {Math.round(mmprojMatch.score * 100)}%
+                      {t('相关度 {p}%', { p: Math.round(mmprojMatch.score * 100) })}
                     </span>
                   )}
                 </div>
@@ -281,24 +283,24 @@ export function ModelsPage() {
                         size="sm"
                         onClick={() => void api.revealInExplorer(config.mmprojPath)}
                       >
-                        打开文件位置
+                        {t('打开文件位置')}
                       </Button>
                     </div>
                   </>
                 ) : (
                   <Alert>
                     <TriangleAlert />
-                    <AlertTitle>未找到可用视觉模型</AlertTitle>
-                    <AlertDescription>{meta.hint}</AlertDescription>
+                    <AlertTitle>{t('未找到可用视觉模型')}</AlertTitle>
+                    <AlertDescription>{t(meta.hint)}</AlertDescription>
                   </Alert>
                 )}
                 {confidence !== 'exact' && config.mmprojPath && (
-                  <p className="text-muted-foreground">{meta.hint}</p>
+                  <p className="text-muted-foreground">{t(meta.hint)}</p>
                 )}
               </div>
             ) : (
               <div className="flex flex-col gap-2">
-                <span className="text-muted-foreground">手动指定视觉投影文件</span>
+                <span className="text-muted-foreground">{t('手动指定视觉投影文件')}</span>
                 <Select
                   value={config.mmprojPath || '__none__'}
                   onValueChange={(value) =>
@@ -309,7 +311,7 @@ export function ModelsPage() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="__none__">不启用视觉模型</SelectItem>
+                    <SelectItem value="__none__">{t('不启用视觉模型')}</SelectItem>
                     {visionModels.map((m) => (
                       <SelectItem key={m.path} value={m.path}>
                         {m.name}
@@ -319,7 +321,7 @@ export function ModelsPage() {
                 </Select>
                 {visionModels.length === 0 && (
                   <p className="text-muted-foreground">
-                    当前模型目录中没有检测到视觉投影文件
+                    {t('当前模型目录中没有检测到视觉投影文件')}
                   </p>
                 )}
               </div>
@@ -327,6 +329,8 @@ export function ModelsPage() {
           </CardContent>
         </Card>
       </div>
+      </div>
+      </ScrollArea>
     </div>
   )
 }

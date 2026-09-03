@@ -1,16 +1,16 @@
 import * as React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { Boxes, Gauge, ScrollText, Settings2 } from 'lucide-react'
+import { Boxes, Gauge, Settings, SlidersHorizontal, Terminal } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { useLauncher } from '@/hooks/use-launcher'
-import { api } from '@/lib/tauri-api'
+import { useI18n } from '@/lib/i18n'
 
 const NAV = [
   { to: '/', label: '控制台', icon: Gauge, end: true },
+  { to: '/settings', label: '参数设置', icon: SlidersHorizontal, end: false },
   { to: '/models', label: '模型', icon: Boxes, end: false },
-  { to: '/logs', label: '运行日志', icon: ScrollText, end: false },
-  { to: '/settings', label: '参数设置', icon: Settings2, end: false },
+  { to: '/logs', label: '运行日志', icon: Terminal, end: false },
+  { to: '/preferences', label: '偏好设置', icon: Settings, end: false },
 ] as const
 
 const APP_NAME = 'XXXXXLCat-llama.cpp'
@@ -32,6 +32,7 @@ const LOGO_MASK: React.CSSProperties = {
  * 固定展开，无折叠控制。
  */
 export function AppSidebar() {
+  const { t } = useI18n()
   return (
     <div className="flex shrink-0 flex-row border-r border-sidebar-border bg-sidebar">
       <div className="flex w-20 flex-col">
@@ -51,7 +52,7 @@ export function AppSidebar() {
               }
             >
               <item.icon className="size-6" />
-              <span>{item.label}</span>
+              <span>{t(item.label)}</span>
             </NavLink>
           ))}
         </nav>
@@ -63,31 +64,23 @@ export function AppSidebar() {
 }
 
 /**
- * 底部品牌标记：服务就绪时点击在系统浏览器打开 llama-server 的 Web UI，
- * 未就绪时回落到控制台页。
+ * 底部品牌标记：点击进入 AI 聊天整页（/chat）。
  */
 function SidebarBrand() {
   const navigate = useNavigate()
-  const { status, endpointUp, config } = useLauncher()
-  const endpoint = status.endpoint
-  // 关闭内置 Web UI（--no-webui）时服务端不提供页面，此时不应引导用户打开。
-  const openable = Boolean(endpoint) && endpointUp && config.webui
-
+  const { t } = useI18n()
   return (
     <button
       type="button"
-      onClick={() => {
-        if (openable && endpoint) void api.openInShell(endpoint)
-        else navigate('/')
-      }}
-      title={openable ? `打开 Web UI（${endpoint}）` : `${APP_NAME}：服务未就绪，前往控制台`}
+      onClick={() => navigate('/chat')}
+      title={t('AI 聊天')}
       aria-label={APP_NAME}
       className="group mt-auto flex h-20 w-full shrink-0 items-center justify-center text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground"
     >
       <div
         role="img"
         aria-label={APP_NAME}
-        className="size-10 shrink-0 bg-current"
+        className="size-15 shrink-0 bg-current"
         style={LOGO_MASK}
       />
     </button>

@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import { formatTime, type LogLine } from '@/lib/tauri-api'
+import { useI18n } from '@/lib/i18n'
 
 function isErrorLine(text: string) {
   const t = text.toLowerCase()
@@ -20,6 +21,7 @@ export function LogView({
   className?: string
   emptyHint?: string
 }) {
+  const { t } = useI18n()
   const bottomRef = React.useRef<HTMLDivElement>(null)
 
   React.useEffect(() => {
@@ -33,7 +35,7 @@ export function LogView({
       <div
         className={`flex min-h-24 items-center justify-center rounded-lg border bg-muted/40 p-4 ${className ?? ''}`}
       >
-        <p className="text-muted-foreground">{emptyHint}</p>
+        <p className="text-muted-foreground">{t(emptyHint)}</p>
       </div>
     )
   }
@@ -54,7 +56,7 @@ export function LogView({
               </span>
             )}
             {line.stream === 'system' ? (
-              <span className="shrink-0 text-muted-foreground">[启动器]</span>
+              <span className="shrink-0 text-muted-foreground">{t('[启动器]')}</span>
             ) : (
               <span className="shrink-0 text-muted-foreground">
                 [{line.stream === 'stderr' ? 'err' : 'out'}]

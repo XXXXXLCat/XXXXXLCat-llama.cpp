@@ -32,8 +32,10 @@ import {
 import { Separator } from '@/components/ui/separator'
 import { Switch } from '@/components/ui/switch'
 import { Textarea } from '@/components/ui/textarea'
+import { ScrollArea } from '@/components/ui/scroll-area'
 import { useLauncher } from '@/hooks/use-launcher'
 import { api } from '@/lib/tauri-api'
+import { useI18n } from '@/lib/i18n'
 import type { LaunchConfig } from '@/lib/tauri-api'
 
 // ------------------------------------------------------------- field pieces
@@ -57,10 +59,11 @@ function NumberField({
   step?: number
   disabled?: boolean
 }) {
+  const { t } = useI18n()
   const id = React.useId()
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{title}</FieldLabel>
+      <FieldLabel htmlFor={id}>{t(title)}</FieldLabel>
       <Input
         id={id}
         type="number"
@@ -74,7 +77,7 @@ function NumberField({
           onChange(Number.isFinite(next) ? next : 0)
         }}
       />
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && <FieldDescription>{t(description)}</FieldDescription>}
     </Field>
   )
 }
@@ -92,17 +95,18 @@ function TextField({
   onChange: (value: string) => void
   placeholder?: string
 }) {
+  const { t } = useI18n()
   const id = React.useId()
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{title}</FieldLabel>
+      <FieldLabel htmlFor={id}>{t(title)}</FieldLabel>
       <Input
         id={id}
         value={value}
         placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
       />
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && <FieldDescription>{t(description)}</FieldDescription>}
     </Field>
   )
 }
@@ -120,18 +124,19 @@ function PathField({
   onChange: (value: string) => void
   onBrowse: () => void
 }) {
+  const { t } = useI18n()
   const id = React.useId()
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{title}</FieldLabel>
+      <FieldLabel htmlFor={id}>{t(title)}</FieldLabel>
       <div className="flex gap-2">
         <Input id={id} value={value} onChange={(e) => onChange(e.target.value)} />
         <Button variant="outline" onClick={onBrowse}>
           <FolderOpen />
-          浏览
+          {t('浏览')}
         </Button>
       </div>
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && <FieldDescription>{t(description)}</FieldDescription>}
     </Field>
   )
 }
@@ -149,10 +154,11 @@ function SelectField({
   onChange: (value: string) => void
   options: Array<{ value: string; label: string }>
 }) {
+  const { t } = useI18n()
   const id = React.useId()
   return (
     <Field>
-      <FieldLabel htmlFor={id}>{title}</FieldLabel>
+      <FieldLabel htmlFor={id}>{t(title)}</FieldLabel>
       <Select value={value} onValueChange={(v) => onChange(String(v))}>
         <SelectTrigger id={id} className="w-full">
           <SelectValue />
@@ -160,12 +166,12 @@ function SelectField({
         <SelectContent>
           {options.map((o) => (
             <SelectItem key={o.value} value={o.value}>
-              {o.label}
+              {t(o.label)}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
-      {description && <FieldDescription>{description}</FieldDescription>}
+      {description && <FieldDescription>{t(description)}</FieldDescription>}
     </Field>
   )
 }
@@ -181,12 +187,13 @@ function ToggleField({
   checked: boolean
   onChange: (checked: boolean) => void
 }) {
+  const { t } = useI18n()
   return (
     <Field orientation="horizontal">
       <FieldLabel>
         <FieldContent>
-          <FieldTitle>{title}</FieldTitle>
-          {description && <FieldDescription>{description}</FieldDescription>}
+          <FieldTitle>{t(title)}</FieldTitle>
+          {description && <FieldDescription>{t(description)}</FieldDescription>}
         </FieldContent>
         <Switch checked={checked} onCheckedChange={onChange} />
       </FieldLabel>
@@ -267,11 +274,12 @@ function Section({
   description: string
   children: React.ReactNode
 }) {
+  const { t } = useI18n()
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
+        <CardTitle>{t(title)}</CardTitle>
+        <CardDescription>{t(description)}</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-5 sm:grid-cols-2">{children}</div>
@@ -283,6 +291,7 @@ function Section({
 // --------------------------------------------------------------------- page
 
 export function SettingsPage() {
+  const { t } = useI18n()
   const { config, dirty, updateConfig, saveConfig, reloadConfig } = useLauncher()
   const [preview, setPreview] = React.useState<string[]>([])
 
@@ -295,25 +304,27 @@ export function SettingsPage() {
   }
 
   return (
-    <div className="flex flex-col gap-4 p-3">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-medium">参数设置</h1>
-          <p className="text-muted-foreground">
-            所有参数对应 llama-server 命令行选项，修改后需重启服务生效
-          </p>
-        </div>
+    <div className="flex h-full flex-col">
+      <header className="flex flex-wrap items-center justify-end gap-3 border-b border-border px-3 py-3">
         <div className="flex items-center gap-2">
+          {dirty && (
+            <span className="flex items-center gap-1.5 text-sm text-amber-500">
+              <span className="size-2 rounded-full bg-amber-500" />
+              {t('有更改未保存')}
+            </span>
+          )}
           <Button variant="outline" onClick={() => void reloadConfig()} disabled={!dirty}>
             <RotateCcw />
-            撤销更改
+            {t('撤销更改')}
           </Button>
           <Button onClick={() => void saveConfig()} disabled={!dirty}>
             <Save />
-            保存参数
+            {t('保存参数')}
           </Button>
         </div>
-      </div>
+      </header>
+      <ScrollArea className="min-h-0 flex-1">
+        <div className="flex flex-col gap-3 p-3">
 
       <Section title="路径" description="llama.cpp 目录与模型文件位置">
         <PathField
@@ -695,20 +706,20 @@ export function SettingsPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>高级</CardTitle>
-          <CardDescription>额外参数与启动器行为</CardDescription>
+          <CardTitle>{t('高级')}</CardTitle>
+          <CardDescription>{t('额外参数与启动器行为')}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <Field>
-            <FieldTitle>附加命令行参数</FieldTitle>
+            <FieldTitle>{t('附加命令行参数')}</FieldTitle>
             <Textarea
               value={config.extraArgs}
               onChange={(e) => updateConfig({ extraArgs: e.target.value })}
-              placeholder="例如：--check-tensors --override-kv tokenizer.ggml.add_bos_token=bool:false"
+              placeholder={t('例如：--check-tensors --override-kv tokenizer.ggml.add_bos_token=bool:false')}
               className="min-h-20 font-mono"
             />
             <FieldDescription>
-              按空格拆分，支持双引号包裹含空格的值；将追加到命令行末尾
+              {t('按空格拆分，支持双引号包裹含空格的值；将追加到命令行末尾')}
             </FieldDescription>
           </Field>
 
@@ -734,17 +745,19 @@ export function SettingsPage() {
           <Collapsible onOpenChange={(open) => open && void showPreview()}>
             <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium">
               <Terminal />
-              预览完整启动命令
+              {t('预览完整启动命令')}
               <ChevronDown className="data-[open]:rotate-180" />
             </CollapsibleTrigger>
             <CollapsibleContent className="pt-3">
               <pre className="overflow-x-auto rounded-lg border bg-muted/40 p-3 font-mono text-xs whitespace-pre-wrap break-all">
-                {preview.length > 0 ? preview.join(' ') : '展开以生成预览'}
+                {preview.length > 0 ? preview.join(' ') : t('展开以生成预览')}
               </pre>
             </CollapsibleContent>
           </Collapsible>
         </CardContent>
       </Card>
+      </div>
+      </ScrollArea>
     </div>
   )
 }
