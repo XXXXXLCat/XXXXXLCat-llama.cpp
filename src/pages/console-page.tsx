@@ -19,6 +19,9 @@ import { useLauncher } from '@/hooks/use-launcher'
 import { useI18n } from '@/lib/i18n'
 import { api, endpointUrl, fileNameOf, formatBytes, formatDuration } from '@/lib/tauri-api'
 
+/** 按 {page} 占位符切分整句文案用的哨兵字符（不可见，不与正常文本冲突） */
+const PAGE_SENTINEL = '\u0000'
+
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex items-baseline justify-between gap-4 py-1.5">
@@ -88,6 +91,10 @@ export function ConsolePage() {
   const fileVolume = visionSizeText ? `${modelSizeText} + ${visionSizeText}` : modelSizeText
   const endpoint = endpointUrl(config.host, config.port)
   const tail = React.useMemo(() => logs.slice(-80), [logs])
+  // 「前往 X 页面选择模型」：整句翻译 + {page} 占位符；按占位符切分后把导航按钮插回句中
+  const [pickModelBefore, pickModelAfter] = t('console.pickModelHint', {
+    page: PAGE_SENTINEL,
+  }).split(PAGE_SENTINEL)
 
   return (
     <div className="flex h-full flex-col">
@@ -126,11 +133,11 @@ export function ConsolePage() {
           <TriangleAlert />
           <AlertTitle>{t('console.noModelSelected')}</AlertTitle>
           <AlertDescription>
-            {t('console.goTo')}
+            {pickModelBefore}
             <Button variant="link" size="sm" render={<Link to="/models" />}>
               {t('nav.models')}
             </Button>
-            {t('console.pickModel')}
+            {pickModelAfter}
           </AlertDescription>
         </Alert>
       )}

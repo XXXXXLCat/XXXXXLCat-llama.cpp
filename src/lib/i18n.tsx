@@ -25,12 +25,11 @@ export type LocalePref = 'system' | LangCode
 export interface LocaleEntry {
   value: LocalePref
   endonym: string     // 本地名（原样显示，不翻译）
-  nameKey?: string    // 仅「跟随系统」需要翻译
 }
 
 // 语言列表：跟随系统置顶，其余按 ISO 639-1 代码字母升序排列
 export const LOCALES: LocaleEntry[] = [
-  { value: 'system', endonym: '', nameKey: 'lang.system' },
+  { value: 'system', endonym: '' },
   { value: 'de', endonym: 'Deutsch' },
   { value: 'en', endonym: 'English' },
   { value: 'es', endonym: 'Español' },
