@@ -1,0 +1,551 @@
+中文
+English
+中英
+Failed to load PDF images
+Audio
+Video
+Vision
+Unknown error executing prompt
+Reading
+Generation
+Tools
+Summary
+Unknown error
+root
+Edit
+Delete
+Export
+Select
+Images
+Audio Files
+Video Files
+Text Files
+PDF Files
+Get runtime info (OS name), may call when user asks about local files or shell commands
+Returns the current local date and time in ISO 8601 format, with the IANA time zone name
+Local AI chat interface powered by llama.cpp
+apple-mobile-web-app-capable
+apple-mobile-web-app-title
+apple-mobile-web-app-status-bar-style
+Path to the media file
+Default
+Off
+Low
+Medium
+High
+Max
+Search the web and fetch full page content as clean markdown.
+Exa
+Search and browse AI models, datasets, spaces, and docs on the Hugging Face Hub.
+Hugging Face
+Search repositories, issues, pull requests and interact with code on GitHub.
+GitHub
+Browse up-to-date documentation and code examples for libraries and frameworks.
+Context7
+Agentic
+Developer
+Display
+General
+Import/Export
+Sampling & Penalties
+Choose the color theme for the interface. You can choose between System (follows your device settings), Light, or Dark.
+Theme
+System
+Light
+Dark
+API Key
+The starting message that defines how model should behave.
+System Message
+Display the system message at the top of each conversation.
+Show system message
+On pasting long text, it will be converted to a file. You can control the file length by setting the value of this parameter. Value 0 means disable.
+Paste long text to file length
+Use Enter to send messages and Shift + Enter for new lines. When disabled, use Ctrl/Cmd + Enter.
+Send message on Enter
+Automatically show microphone button instead of send button when textarea is empty for models with audio modality support.
+Show microphone on empty input
+Enable
+Choose how conversation titles are generated. The first non-empty line uses a fast deterministic rule; the LLM option uses a model-generated title from the first message exchange.
+Conversation title
+Use first non-empty line for the conversation title
+Generate title with LLM
+Optional template for the title generation prompt. Use {{USER}} for the user message and {{ASSISTANT}} for the assistant message.
+LLM title generation prompt
+Counterpart of the conversation title radio; stored and synced without a dedicated UI field.
+When copying a message with text attachments, combine them into a single plain text string instead of a special format that can be pasted back as attachments.
+Copy text attachments as plain text
+Parse PDF as image instead of text. Automatically falls back to text processing for non-vision models.
+Parse PDF as image
+Images larger than this will be resized before sending to server. Set to 0 to disable.
+Maximum image resolution (megapixels)
+Display generation statistics (tokens/second, token count, duration) below each assistant message.
+Show message generation statistics
+Display per-turn statistics (tokens, duration) under each turn in agentic responses. Shown only when
+Show statistics for individual agentic turns
+Expand thought process by default when generating messages.
+Show thought in progress
+Automatically expand tool call details while executing and keep them expanded after completion.
+Always show tool call content
+Render user messages using markdown formatting in the chat. Turn this off to keep a message exactly as typed; @-mention badges show either way.
+Render user content as Markdown
+Render the reasoning/thinking block content as formatted Markdown instead of plain text.
+Render thinking as Markdown
+Always display code blocks at their full natural height, overriding any height limits.
+Use full height code blocks
+Disable automatic scrolling while messages stream so you can control the viewport position manually.
+Disable automatic scroll
+Always keep the sidebar visible on desktop instead of auto-hiding it.
+Always show sidebar on desktop
+Show open chats as browser-style tabs above the conversation, one per open chat. When disabled, only one chat is shown at a time.
+Conversation tabs
+Display full raw model identifiers (e.g.
+Show raw model names
+Display quantization badges (e.g. Q8_0, Q4_K_M) next to model names throughout the interface.
+Show model quantization information
+Display model tags (e.g.
+Show model tags
+Display the organization name in the model selector trigger button.
+Show organization name in model selector trigger
+Display the current build version in the bottom-right corner of the interface.
+Show build version information
+Display the full file system path inside file and folder @-mention badges instead of just the file or folder name.
+Show full path in mentions
+Configure MCP servers as a JSON list. Use the form in the MCP Client settings section to edit.
+MCP servers
+Maximum number of tool execution cycles before stopping (prevents infinite loops).
+Agentic turns
+Timeout for individual MCP tool calls.
+MCP request timeout (seconds)
+How many directory levels below the working directory the @-mention file search descends. Larger values surface deeply nested files but take longer on large trees.
+Mention search depth
+Controls the randomness of the generated text by affecting the probability distribution of the output tokens. Higher = more random, lower = more focused.
+Temperature
+Addon for the temperature sampler. The added value to the range of dynamic temperature, which adjusts probabilities by entropy of tokens.
+Dynamic temperature range
+Addon for the temperature sampler. Smoothes out the probability redistribution based on the most probable token.
+Dynamic temperature exponent
+Keeps only k top tokens.
+Top K
+Limits tokens to those that together have a cumulative probability of at least p
+Top P
+Limits tokens based on the minimum probability for a token to be considered, relative to the probability of the most likely token.
+Min P
+XTC sampler cuts out top tokens; this parameter controls the chance of cutting tokens at all. 0 disables XTC.
+XTC probability
+XTC sampler cuts out top tokens; this parameter controls the token probability that is required to cut that token.
+XTC threshold
+Sorts and limits tokens based on the difference between log-probability and entropy.
+Typical P
+The maximum number of token per output. Use -1 for infinite (no limit).
+Max tokens
+The order at which samplers are applied, in simplified way. Default is
+Samplers
+Enable backend-based samplers. When enabled, supported samplers run on the accelerator backend for faster sampling.
+Backend sampling
+Last n tokens to consider for penalizing repetition
+Repeat last N
+Controls the repetition of token sequences in the generated text
+Repeat penalty
+Limits tokens based on whether they appear in the output or not.
+Presence penalty
+Limits tokens based on how often they appear in the output.
+Frequency penalty
+DRY sampling reduces repetition in generated text even across long contexts. This parameter sets the DRY sampling multiplier.
+DRY multiplier
+DRY sampling reduces repetition in generated text even across long contexts. This parameter sets the DRY sampling base value.
+DRY base
+DRY sampling reduces repetition in generated text even across long contexts. This parameter sets the allowed length for DRY sampling.
+DRY allowed length
+DRY sampling reduces repetition in generated text even across long contexts. This parameter sets DRY penalty for the last n tokens.
+DRY penalty last N
+After each response, re-submit the conversation to pre-fill the server KV cache. Makes the next turn faster since the prompt is already encoded while you read the response.
+Pre-fill KV cache after response
+Send reasoning_format=none so the server returns thinking tokens inline instead of extracting them into a separate field.
+Disable reasoning content parsing
+Strip thinking from previous messages before sending. When off, thinking is sent back via the reasoning_content field so the model sees its own chain-of-thought across turns.
+Exclude reasoning from context
+Show toggle button to display messages as plain text instead of Markdown-formatted content
+Enable raw output toggle
+Expose a run_javascript tool to the model. Code runs in a Web Worker inside a sandboxed iframe with an opaque origin, isolated from the WebUI and its API, with a hard timeout.
+JavaScript sandbox tool
+Pre-load nerdamer in the sandbox for symbolic computation: simplify, diff, integrate, solve, and more. Requires
+Symbolic math (nerdamer)
+Custom JSON parameters to send to the API. Must be valid JSON format.
+Custom JSON
+CSS injected into the page at runtime. Set it here, or ship it server side via the --ui-config customCss field.
+Custom CSS
+Current time
+Read media
+Run JavaScript
+Edit file
+Run command
+Search files
+Runtime info
+Search in files
+Read file
+Write file
+New chat
+Search
+Settings
+,
+Copy localStorage keys from LlamaCppWebui to LlamaUi prefix (non-destructive)
+Copy IndexedDB from LlamacppWebui to LlamaUi database (non-destructive)
+Migrate legacy marker-based messages to structured format
+Copy standalone theme key to config object (non-destructive)
+Copy legacy custom config key to customJson (non-destructive)
+Copy mcpDefaultEnabled localStorage key into settings config (preserves legacy keys)
+Coerce legacy string-encoded booleans in persisted config to real booleans
+Unfold the single raw text render toggle onto the per-surface render keys
+Merge mcpDefaultServerOverrides entries onto mcpServers[i].enabled (preserves legacy key)
+Seed per-conversation disabled tool keys from the global defaults and legacy per-conversation MCP server overrides (legacy field preserved)
+, error);
+		try {
+			const text = await response.text();
+
+			if (text.trim()) return `${status}: ${text.trim()}`;
+		} catch (error) {
+			console.error(
+, error);
+
+			if (activeConv) this.host.setChatLoading(activeConv.id, false);
+		}
+	}
+
+	async deleteMessage(messageId: string): Promise<void> {
+		const activeConv = conversationsStore.activeConversation;
+
+		if (!activeConv) return;
+
+		try {
+			const allMessages = await conversationsStore.getConversationMessages(activeConv.id);
+			const messageToDelete = findMessageById(allMessages, messageId);
+
+			if (!messageToDelete) return;
+
+			const currentPath = filterByLeafNodeId(allMessages, activeConv.currNode ||
+, error);
+		}
+	}
+
+	async editAssistantMessage(
+		messageId: string,
+		newContent: string,
+		shouldBranch: boolean
+	): Promise<void> {
+		const activeConv = conversationsStore.activeConversation;
+
+		if (!activeConv || this.host.isChatLoadingInternal(activeConv.id)) return;
+
+		const result = this.getMessageByIdWithRole(messageId, MessageRole.ASSISTANT);
+
+		if (!result) return;
+
+		const { index: idx, message: msg } = result;
+
+		try {
+			if (shouldBranch) {
+				const newMessage = await DatabaseService.createMessageBranch(
+					{
+						children: [],
+						content: newContent,
+						convId: msg.convId,
+						model: msg.model,
+						role: msg.role,
+						timestamp: Date.now(),
+						toolCalls: msg.toolCalls ||
+, error);
+		}
+	}
+
+	async editMessageWithBranching(
+		messageId: string,
+		newContent: string,
+		newExtras?: DatabaseMessageExtra[]
+	): Promise<void> {
+		const activeConv = conversationsStore.activeConversation;
+
+		if (!activeConv || this.host.isChatLoadingInternal(activeConv.id)) return;
+
+		let result = this.getMessageByIdWithRole(messageId, MessageRole.USER);
+
+		if (!result) result = this.getMessageByIdWithRole(messageId, MessageRole.SYSTEM);
+
+		if (!result) return;
+
+		const { index: idx, message: msg } = result;
+
+		try {
+			const allMessages = await conversationsStore.getConversationMessages(activeConv.id);
+			const rootMessage = allMessages.find((m) => m.type ===
+, error);
+		}
+	}
+
+	async getDeletionInfo(messageId: string): Promise<{
+		totalCount: number;
+		userMessages: number;
+		assistantMessages: number;
+		messageTypes: string[];
+	}> {
+		const activeConv = conversationsStore.activeConversation;
+
+		if (!activeConv)
+			return { assistantMessages: 0, messageTypes: [], totalCount: 0, userMessages: 0 };
+
+		const allMessages = await conversationsStore.getConversationMessages(activeConv.id);
+		const messageToDelete = findMessageById(allMessages, messageId);
+
+		// For system messages, don
+, error);
+
+			this.host.setChatLoading(activeConv?.id ||
+, error);
+		}
+	}
+
+	/**
+	 * Open a fresh assistant turn anchored at the last tool result of a resolved
+	 * agentic round and let streamChatCompletion route through runAgenticFlow.
+	 * Used by continueAssistantMessage when classifyContinueIntent returns
+	 * next_turn, meaning the target assistant already has its tool_calls paired
+	 * with trailing tool results and the next thing to generate is a brand new
+	 * turn rather than a token level continuation.
+	 */
+	private async continueAsNextAgenticTurn(anchorIndex: number): Promise<void> {
+		const activeConv = conversationsStore.activeConversation;
+
+		if (!activeConv) return;
+
+		const anchor = conversationsStore.activeMessages[anchorIndex];
+
+		if (!anchor) return;
+
+		this.host.cancelPreEncode();
+		this.host.setChatLoading(activeConv.id, true);
+		this.host.clearChatStreaming(activeConv.id);
+		try {
+			const allMessages = await conversationsStore.getConversationMessages(activeConv.id);
+			const anchorMessage = findMessageById(allMessages, anchor.id);
+
+			if (!anchorMessage) {
+				this.host.setChatLoading(activeConv.id, false);
+
+				return;
+			}
+
+			const newAssistantMessage = await DatabaseService.createMessageBranch(
+				{
+					children: [],
+					content:
+, error);
+
+			return false;
+		}
+	}
+
+	savePendingDraft(message: string, files: ChatUploadedFile[]): void {
+		this.pendingDraftMessage = message;
+		this.pendingDraftFiles = [...files];
+	}
+	async sendMessage(content: string, extras?: DatabaseMessageExtra[]): Promise<void> {
+		if (!content.trim() && (!extras || extras.length === 0)) return;
+
+		const activeConv = conversationsStore.activeConversation;
+
+		// If agentic loop is running, inject as a steering message instead of starting a new flow
+		if (activeConv && agenticStore.isRunning(activeConv.id)) {
+			agenticStore.injectSteeringMessage(activeConv.id, content, extras);
+
+			return;
+		}
+
+		// If non-agentic streaming is active, queue as a pending message to send after completion
+		if (activeConv && this.isChatLoadingInternal(activeConv.id)) {
+			this.injectPendingMessage(activeConv.id, content, extras);
+
+			return;
+		}
+
+		// Cancel any in-flight pre-encode request
+		this.cancelPreEncode();
+
+		// Consume MCP resource attachments - converts them to extras and clears the live store
+		const resourceExtras = mcpStore.consumeResourceAttachmentsAsExtras();
+		const allExtras = resourceExtras.length > 0 ? [...(extras || []), ...resourceExtras] : extras;
+
+		let isNewConversation = false;
+
+		if (!activeConv) {
+			await conversationsStore.createConversation();
+			isNewConversation = true;
+		}
+
+		const currentConv = conversationsStore.activeConversation;
+
+		if (!currentConv) return;
+
+		this.showErrorDialog(null);
+		this.setChatLoading(currentConv.id, true);
+		this.clearChatStreaming(currentConv.id);
+		try {
+			let parentIdForUserMessage: string | undefined;
+
+			if (isNewConversation) {
+				const rootId = await DatabaseService.createRootMessage(currentConv.id);
+				const currentConfig = settingsStore.config;
+				const systemPrompt = currentConfig.systemMessage?.toString().trim();
+
+				let sysOrRootId = rootId;
+
+				if (systemPrompt) {
+					const systemMessage = await DatabaseService.createSystemMessage(
+						currentConv.id,
+						systemPrompt,
+						rootId
+					);
+
+					conversationsStore.addMessageToActive(systemMessage);
+					sysOrRootId = systemMessage.id;
+				}
+
+				// Reflect a working directory picked on the new-chat screen into
+				// chat history before the first user message, so the model sees
+				// it on its first turn. createConversation() has already threaded
+				// the pending pick onto the conversation.
+				if (currentConv.cwd) {
+					const cwdMessage = await this.addMessage(
+						MessageRole.USER,
+						formatCwdMessage(currentConv.cwd, await toolsStore.resolveServerHome()),
+						MessageType.TEXT,
+						sysOrRootId,
+						undefined,
+						true
+					);
+
+					parentIdForUserMessage = cwdMessage.id;
+				} else {
+					parentIdForUserMessage = sysOrRootId;
+				}
+			}
+
+			const userMessage = await this.addMessage(
+				MessageRole.USER,
+				content,
+				MessageType.TEXT,
+				parentIdForUserMessage ??
+, error);
+			this.setChatLoading(currentConv.id, false);
+			const dialogType =
+				error instanceof Error && error.name ===
+, error);
+		}
+	}
+
+	/**
+	 * Marks a conversation as recently active: stamps lastModified (persisted)
+	 * and moves it to the top of the list. Only message-activity flows call
+	 * this; metadata updates (rename, pin, settings) do not.
+	 *
+	 * @param convId - Conversation that produced the activity, defaults to the active one
+	 */
+	updateConversationTimestamp(convId?: string): void {
+		const targetId = convId ?? this.activeConversation?.id;
+
+		if (!targetId) return;
+
+		const now = Date.now();
+		const chatIndex = this.conversations.findIndex((c) => c.id === targetId);
+
+		if (chatIndex !== -1) {
+			this.conversations[chatIndex].lastModified = now;
+			const updatedConv = this.conversations.splice(chatIndex, 1)[0];
+
+			this.conversations = [updatedConv, ...this.conversations];
+		}
+
+		if (this.activeConversation?.id === targetId) {
+			this.activeConversation = { ...this.activeConversation, lastModified: now };
+		}
+
+		DatabaseService.updateConversation(targetId, { lastModified: now }).catch((error) =>
+			console.error(
+Please enter a server URL first.
+Unknown error occurred
+, error);
+
+			return false;
+		}
+	}
+
+	toDisplayName(id: string): string {
+		const segments = id.split(/\\|\//);
+		const candidate = segments.pop();
+
+		return candidate && candidate.trim().length > 0 ? candidate : id;
+	}
+
+	toggleFavorite(modelId: string): void {
+		const next = new SvelteSet(this.favoriteModelIds);
+
+		if (next.has(modelId)) {
+			next.delete(modelId);
+		} else {
+			next.add(modelId);
+		}
+
+		this.favoriteModelIds = next;
+
+		try {
+			localStorage.setItem(FAVORITE_MODELS_LOCALSTORAGE_KEY, JSON.stringify([...next]));
+		} catch {
+			toast.error(
+Failed to load models
+Failed to load model
+Failed to unload model
+Insert an MCP prompt
+prompt
+cwd
+Select model
+model
+, error);
+
+		throw new Error(
+			`Failed to convert PDF to text: ${error instanceof Error ? error.message :
+Enable PDF as Images
+JavaScript source to execute
+path
+schema
+table
+factor
+simplify
+gcd
+lcm
+roots
+divide
+div
+partfrac
+deg
+coeffs
+line
+sqcomp
+diff
+sum
+product
+integrate
+defint
+S
+C
+limit
+laplace
+ilt
+mean
+median
+mode
+smpvar
+variance
+smpstdev
+stdev
+zscore
+solveEquations
+solve
+setEquation

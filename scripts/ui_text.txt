@@ -1,0 +1,262 @@
+Your browser does not support the audio element.
+Audio preview not available
+Text
+Pages
+Preview only
+The selected model does not support vision. Only the extracted
+text
+will be sent to the model.
+Converting PDF to images...
+Failed to load PDF images
+Page
+No PDF pages available
+Preview not available for this file type
+Your browser does not support the video element.
+Video preview not available
+Current model does not support audio
+Skip reasoning
+Stop
+Send
+Add files
+System Message
+MCP Servers
+Reasoning
+Maximum reasoning effort with extended context usage
+Add to chat
+Add files, system prompt or configure MCP servers
+Tools
+tool
+Loading tools...
+Run llama-server with
+flag to enable
+Server Tools
+MCP Tools
+Failed to load tools
+No tools available
+Token usage details
+Across all turns
+? `$  reused from KV cache`
+KV cache total
+tok
+Available context size is only visible once the model is loaded.
+Load model
+Loading model...
+Context
+used
+remaining
+No context info available
+Open working directory picker
+Browse
+Searching in:
+Searching...
+No matching folders
+Open file mention picker
+arg
+Cancel
+Use Prompt
+Update without re-sending
+Branch conversation after edit
+Working directory cleared
+Save
+Show full system message
+Collapse System Message
+Input
+Receiving arguments...
+Response was truncated
+Output
+Waiting for result...
+No output
+Edit file
+No edits
+Running...
+timed out
+exit
+exit 0
+Total matches:
+No matches
+Current time
+Runtime info
+Read file
+Waiting for file content...
+Read media
+Media attachment not found in message extras
+Size:   bytes
+MIME:
+Waiting for media data...
+Console
+No results
+Write file
+bytes
+Agentic turn limit reached. Continue?
+Allow use of
+Allow once
+Always allow
+Always allow all tools from
+Approve all tools from
+Deny
+Show raw output
+? `Delete $  Messages`
+Title
+Include all attachments
+Attach a file
+Drop your files here to upload
+Hello there
+or upload
+files to get started
+Reconnecting to the stream...
+Stop generation
+Close tab
+Toggle content
+mermaid
+Generating diagram...
+svg
+Rendering svg...
+Prompt tokens:
+Context size:
+Close preview
+Rename conversation
+Choose a new title for this conversation.
+Conversation title
+Select Conversations to
+with your existing conversations.
+Empty Files Detected
+Empty Files:
+What happened:
+Empty files cannot be processed or sent to the AI model
+These files have been automatically removed from your attachments
+You can try uploading files with content instead
+trust.
+to protect your credentials.
+Include sensitive data
+File Upload Error
+Some files cannot be uploaded with the current model.
+Unsupported File Types
+File type not supported
+No content available
+MCP Resources
+Try again
+Select a resource to preview
+Attach Resource
+Attach
+Add New MCP Server
+Recommended Servers
+Dismiss
+Add
+Model Information
+Current model details and capabilities
+Loading model information...
+Model
+File Path
+Context Size
+tokens
+Not available
+Training Context
+Model Size
+Parameters
+Embedding Size
+Vocabulary Size
+Vocabulary Type
+Parallel Slots
+Modalities
+Build Info
+Chat Template
+No model information available
+Model Not Available
+Requested:
+Select an available model:
+Settings
+Resources
+Prompts
+Logging
+Completions
+Tasks
+Connected in  ms
+details
+Priority:
+Server:
+Resolved URI:
+Read Resource
+Server URL
+Display name
+Authorization
+Bearer
+Use llama-server proxy
+llama-server
+with
+Server instructions
+Loading resources...
+No resources available
+Available resources
+Error:
+No resources
+Templates
+Protocol version:
+Delete Server
+Are you sure you want to delete
+? This action cannot be
+undone.
+Delete
+Configure Server
+tools available · Show details
+Conversation Name
+Messages
+No conversations found matching " "
+No conversations available
+Loading models…
+No models available.
+Select model
+No model
+No models found.
+Loaded models
+Favorite models
+Available models
+Select Model
+Choose a model to use for the conversation
+? PanelLeftOpen
+See parent conversation
+Pinned
+Recent conversations
+Search results
+Server Connection Error
+Enter API Key
+API Key
+✓ API key validated successfully! Connecting...
+Validating...
+Success!
+Save & Retry
+Connecting...
+Retry Connection
+Troubleshooting
+Start the llama-server:
+or
+llama-server -m locally-stored-model.gguf
+Check that the server is accessible at the correct URL
+Verify your network connection
+Check server logs for any error messages
+Connecting to Server
+ctx:
+Reset to default
+Save settings
+Reset Settings to Default
+configurations.
+Reset to Default
+Add your first MCP server
+Connect a remote MCP server by URL.
+Add New Server
+Add another MCP server
+Reload app
+Settings are saved in browser's localStorage
+Show system message in conversations
+conversation
+... and   more
+Custom
+Tool
+Enabled
+Update available
+A new version is available. Reload to update.
+Reload
+Close
+Error   -
+Error
+Go Home
+Search · llama.cpp

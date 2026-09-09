@@ -1,0 +1,74 @@
+Language
+Preview {name}
+Previous
+Next
+PDF Page {index + 1}
+Type a message...
+Skip reasoning
+Context usage
+Choose working directory
+Ask anything...
+Edit your message...
+Discard changes?
+Assistant message with actions
+MCP Prompt message with actions
+System message with actions
+Edit system message...
+User message with actions
+Pending user message
+More allow options
+Delete Message
+Fork Conversation
+Enter fork name
+Message version {siblingInfo.currentIndex + 1} of {siblingInfo.totalSiblings}
+{predictedTokens?.toLocaleString()} tokens
+{tokensPerSecond.toFixed(2)} t/s
+{agenticTimings!.toolCallsCount} calls
+{agenticToolsPerSecond.toFixed(2)} calls/s
+{agenticTimings!.turns} turns
+{agenticTimings!.llm.predicted_n.toLocaleString()} tokens
+{promptTokens} tokens
+{promptTokensPerSecond!.toFixed(2)} tokens/s
+Delete Conversation
+Open conversations
+Stop generation
+Close tab
+New chat
+Thinking...
+Run command
+Zoom out
+Zoom in
+Reset view
+Download SVG
+Close
+Preview {language}
+Close preview
+Conversation title
+Download content
+Save
+Delete conversation?
+Enter {name}
+Remove item
+Search...
+Resource content
+Paste token here
+Open website
+Search resources...
+Refresh resources
+Edit
+Refresh
+Delete
+Search conversations...
+Scroll left
+Scroll right
+Search models...
+Bulk actions for selected conversations
+Delete {selectedCount} conversation{selectedCount === 1 ?
+Enter your API key...
+Reset to default
+Conversations
+Export
+Import
+Delete All
+Settings
+Delete all conversations

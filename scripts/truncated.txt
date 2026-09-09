@@ -1,0 +1,18 @@
+PREFIX||Delete
+FULL||Delete {selectedCount} conversation{selectedCount === 1 ? '' : 's'}
+
+PREFIX||Execution timeout in milliseconds, default 
+FULL||Execution timeout in milliseconds, default ${SANDBOX_TIMEOUT_MS_DEFAULT}, max ${SANDBOX_TIMEOUT_MS_MAX}
+
+PREFIX||Message version 
+FULL||Message version {siblingInfo.currentIndex + 1} of {siblingInfo.totalSiblings}
+
+PREFIX||PDF Page 
+FULL||PDF Page {index + 1}
+
+PREFIX||Read a media file and attach it to the conversation so it can be perceived directly. Supports 
+FULL||Read a media file and attach it to the conversation so it can be perceived directly. Supports ${kinds.join(' and ')}.
+
+PREFIX||Set the API Key if you are using
+FULL||Set the API Key if you are using <code> ${CLI_FLAGS.API_KEY} </code> option for the server.
+

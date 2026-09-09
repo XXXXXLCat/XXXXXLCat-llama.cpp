@@ -1,0 +1,99 @@
+${FILE_GLOB_SEARCH_PICKERS.DEFAULT_SEARCH_DEPTH}
+${label} (${position + 1})
+, error);
+
+			return false;
+		}
+	}
+
+	savePendingDraft(message: string, files: ChatUploadedFile[]): void {
+		this.pendingDraftMessage = message;
+		this.pendingDraftFiles = [...files];
+	}
+	async sendMessage(content: string, extras?: DatabaseMessageExtra[]): Promise<void> {
+		if (!content.trim() && (!extras || extras.length === 0)) return;
+
+		const activeConv = conversationsStore.activeConversation;
+
+		// If agentic loop is running, inject as a steering message instead of starting a new flow
+		if (activeConv && agenticStore.isRunning(activeConv.id)) {
+			agenticStore.injectSteeringMessage(activeConv.id, content, extras);
+
+			return;
+		}
+
+		// If non-agentic streaming is active, queue as a pending message to send after completion
+		if (activeConv && this.isChatLoadingInternal(activeConv.id)) {
+			this.injectPendingMessage(activeConv.id, content, extras);
+
+			return;
+		}
+
+		// Cancel any in-flight pre-encode request
+		this.cancelPreEncode();
+
+		// Consume MCP resource attachments - converts them to extras and clears the live store
+		const resourceExtras = mcpStore.consumeResourceAttachmentsAsExtras();
+		const allExtras = resourceExtras.length > 0 ? [...(extras || []), ...resourceExtras] : extras;
+
+		let isNewConversation = false;
+
+		if (!activeConv) {
+			await conversationsStore.createConversation();
+			isNewConversation = true;
+		}
+
+		const currentConv = conversationsStore.activeConversation;
+
+		if (!currentConv) return;
+
+		this.showErrorDialog(null);
+		this.setChatLoading(currentConv.id, true);
+		this.clearChatStreaming(currentConv.id);
+		try {
+			let parentIdForUserMessage: string | undefined;
+
+			if (isNewConversation) {
+				const rootId = await DatabaseService.createRootMessage(currentConv.id);
+				const currentConfig = settingsStore.config;
+				const systemPrompt = currentConfig.systemMessage?.toString().trim();
+
+				let sysOrRootId = rootId;
+
+				if (systemPrompt) {
+					const systemMessage = await DatabaseService.createSystemMessage(
+						currentConv.id,
+						systemPrompt,
+						rootId
+					);
+
+					conversationsStore.addMessageToActive(systemMessage);
+					sysOrRootId = systemMessage.id;
+				}
+
+				// Reflect a working directory picked on the new-chat screen into
+				// chat history before the first user message, so the model sees
+				// it on its first turn. createConversation() has already threaded
+				// the pending pick onto the conversation.
+				if (currentConv.cwd) {
+					const cwdMessage = await this.addMessage(
+						MessageRole.USER,
+						formatCwdMessage(currentConv.cwd, await toolsStore.resolveServerHome()),
+						MessageType.TEXT,
+						sysOrRootId,
+						undefined,
+						true
+					);
+
+					parentIdForUserMessage = cwdMessage.id;
+				} else {
+					parentIdForUserMessage = sysOrRootId;
+				}
+			}
+
+			const userMessage = await this.addMessage(
+				MessageRole.USER,
+				content,
+				MessageType.TEXT,
+				parentIdForUserMessage ?? 
+Merge mcpDefaultServerOverrides entries onto mcpServers[i].enabled (preserves legacy key)

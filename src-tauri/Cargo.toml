@@ -1,0 +1,42 @@
+[package]
+name = "app"
+version = "0.1.15"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+edition = "2021"
+rust-version = "1.77.2"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.3", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+tauri = { version = "2.11.3", features = [] }
+tauri-plugin-log = "2"
+tauri-plugin-dialog = "2"
+sysinfo = "0.33"
+# WebUI 中文注入反向代理
+axum = "0.7"
+reqwest = { version = "0.12", features = ["stream", "gzip", "deflate"] }
+futures-util = "0.3"
+bytes = "1"
+tokio = { version = "1", features = ["rt", "net", "time", "macros", "sync"] }
+
+[features]
+# 生产构建必须启用，切勿删除！
+# 启用后 Tauri 才注册 tauri://localhost 自定义协议并从内嵌资源读取打包好的前端。
+# 缺失此特性时，Release 程序不去读内嵌前端，而是回退请求 devUrl(http://127.0.0.1:5180)，
+# 表现为：双击 exe 整个窗口白屏并提示「127.0.0.1 拒绝连接 / 无法访问此页面」。
+# 另注：npm run tauri build 会自动追加 --features custom-protocol，
+# 若本段不存在，cargo 会报「does not have the feature custom-protocol」而构建失败。
+custom-protocol = ["tauri/custom-protocol"]

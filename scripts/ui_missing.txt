@@ -1,0 +1,89 @@
+or
+arg
+cwd
+deg
+div
+Exa
+gcd
+ilt
+lcm
+sum
+svg
+tok
+ctx:
+diff
+exit
+line
+mean
+mode
+Page
+path
+root
+tool
+used
+with
+bytes
+limit
+MIME:
+model
+Model
+Pages
+roots
+solve
+stdev
+table
+Bearer
+coeffs
+defint
+divide
+exit 0
+factor
+median
+prompt
+schema
+smpvar
+sqcomp
+tokens
+trust.
+zscore
+laplace
+mermaid
+product
+Server:
+undone.
+Context7
+Messages
+partfrac
+simplify
+smpstdev
+variance
+Error   -
+integrate
+Priority:
+remaining
+timed out
+Requested:
+conversation
+Empty Files:
+llama-server
+Context size:
+Resolved URI:
+Searching in:
+Size:   bytes
+... and   more
+KV cache total
+Prompt tokens:
+Total matches:
+What happened:
+? PanelLeftOpen
+configurations.
+Connected in  ms
+Protocol version:
+? `Delete $  Messages`
+? This action cannot be
+apple-mobile-web-app-title
+? `$  reused from KV cache`
+apple-mobile-web-app-capable
+tools available · Show details
+apple-mobile-web-app-status-bar-style
+llama-server -m locally-stored-model.gguf
